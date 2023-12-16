@@ -9,9 +9,9 @@
 #include <fstream>
 #include <vector>
 
-const int stack_num = 1000;
-const int block_num = 1000;
-const int block_size = 400;
+const int stack_num = 500;
+const int block_num = 500;
+const int block_size = 301;
 const int key_length = 65;//key长度（以\0结尾）
 //栈类
 struct Stack {
@@ -38,15 +38,12 @@ class Key_value_database {
 private:
 //public:
     int element_max = 100000;//最多多少元素
-//    int element_max=500;//最多多少元素
     int num_of_block = 0;//块总数
     unsigned long long begin_of_catalog = sizeof(Stack);//目录开始位置
     int block_have = 0;//用到的块数
     //以元素数为单位
-    int merge_value = 275;//合并临界
-    int split_value = 325;//分裂临界
-//    int merge_value = 4;//合并临界
-//    int split_value = 8;//分裂临界
+    int merge_value = 280;//合并临界
+    int split_value = 300;//分裂临界
     std::string catalog_file_name = "catalog";//目录文件名
     std::string dictionary_file_name = "dictionary";
     std::fstream file;
@@ -62,7 +59,7 @@ public:
 
     ~Key_value_database();
 
-    void initialize();//建立或检查文件
+    void initialize(std::string);//建立或检查文件
     void insert(char [65], int);//插入
     void delete_(const char [65], int);//maybe not found
     void find(const char [65]);//找到

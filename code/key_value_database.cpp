@@ -23,7 +23,9 @@ Key_value_database::Key_value_database() = default;
 
 Key_value_database::~Key_value_database() = default;
 
-void Key_value_database::initialize() {
+void Key_value_database::initialize(std::string name) {
+    dictionary_file_name=name+"dictionary";
+    catalog_file_name=name+"catalog";
     file.open(dictionary_file_name, std::ios::out | std::ios::in | std::ios::binary);
     if (!file) {//目标文件存在吗？
         //新建目标文件：
@@ -95,9 +97,6 @@ void Key_value_database::find(const char key[65]) {
             int cmp = strcmp(key, dictionary.key[i]);
             if (cmp < 0) {
                 break;
-            }
-            if (i==178){
-                std::cout<<"h";
             }
             if (cmp == 0) {
                 flag = true;
@@ -215,6 +214,7 @@ bool Key_value_database::find_blocks(const char key[65], std::vector<unsigned lo
     file.close();
     return true;
 }
+
 unsigned long long Key_value_database::find_blocks_hard(const char key[65], int value, int &x_th_in_dictionary) {
     open(catalog_file_name);
     file.seekg(begin_of_catalog);
@@ -340,8 +340,6 @@ void Key_value_database::delete_(const char key[65], int value) {
     open(dictionary_file_name);
     file.seekg(block_address);
     Dictionary dictionary;
-    bool change_first_factor = false;
-    bool delete_to_empty = false;
     file.read(reinterpret_cast<char *>(&dictionary), sizeof(Dictionary));
     for (int i = 0; i < dictionary.num; ++i) {
         int cmp = strcmp(key, dictionary.key[i]);
@@ -358,9 +356,6 @@ void Key_value_database::delete_(const char key[65], int value) {
                 file.seekp(block_address);
                 file.write(reinterpret_cast<char *>(&dictionary), sizeof(Dictionary));
                 file.close();
-                if (dictionary.num == 0) {
-                    delete_to_empty = true;
-                }
                 //改头
                 open(catalog_file_name);
                 Catalog catalog;
@@ -429,9 +424,9 @@ void Key_value_database::merge(unsigned long long block_position_in_dictionary, 
     file.seekg(0);
     file.read(reinterpret_cast<char *>(&stack), sizeof(Stack));
     unsigned long long l_address = catalog.address[l], r_address = catalog.address[r];
-    if (catalog.element[l]==0){
-        catalog.value[l]=catalog.value[r];
-        std::swap(catalog.key[l],catalog.key[r]);
+    if (catalog.element[l] == 0) {
+        catalog.value[l] = catalog.value[r];
+        std::swap(catalog.key[l], catalog.key[r]);
     }
     catalog.element[l] += catalog.element[r];
     array_delete(catalog.element, catalog.used_block, r);
@@ -466,6 +461,7 @@ void Key_value_database::merge(unsigned long long block_position_in_dictionary, 
     file.write(reinterpret_cast<char *>(&empty), sizeof(Dictionary));
     file.close();
 }
+
 void Key_value_database::split(unsigned long long block_position_in_dictionary, int x_th_in_catalog) {
     block_have++;
     Stack stack;
@@ -481,9 +477,9 @@ void Key_value_database::split(unsigned long long block_position_in_dictionary, 
     unsigned long long empty_block_position = stack.stack[stack.end];
     stack.stack[stack.end] = 0;
     stack.end--;
-    int mid_value = ld.value[ld.num / 2];//!
+    int mid_value = ld.value[ld.num / 2];
     char mid_key[key_length] = {'\0'};
-    for (int i = 0; i < ld.num - ld.num / 2; ++i) {
+    for (int i = 0; i < key_length; ++i) {
         mid_key[i] = ld.key[ld.num / 2][i];
     }
     for (int i = 0; i < ld.num - ld.num / 2; ++i) {
@@ -496,7 +492,7 @@ void Key_value_database::split(unsigned long long block_position_in_dictionary, 
     array_insert(catalog.element, catalog.used_block, x_th_in_catalog);
     array_insert(catalog.address, catalog.used_block, x_th_in_catalog);
     array_insert(catalog.value, catalog.used_block, x_th_in_catalog);
-    for (int i = catalog.used_block; i > x_th_in_catalog+1; --i) {
+    for (int i = catalog.used_block; i > x_th_in_catalog + 1; --i) {
         std::swap(catalog.key[i], catalog.key[i - 1]);
     }
     catalog.value[x_th_in_catalog + 1] = mid_value;

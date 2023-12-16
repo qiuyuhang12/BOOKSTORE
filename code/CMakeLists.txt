@@ -9,4 +9,14 @@ add_executable(Bookstore_2023
         key_value_database.cpp
         key_value_database.h
         main.cpp
+        main_system.h
+        log_system.h
+        account_system.h
+        book_system.h
+        blog_system.h
+        main_system.cpp
+        log_system.cpp
+        book_system.cpp
+        blog_system.cpp
+        account_system.cpp
 )
