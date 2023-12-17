@@ -14,6 +14,7 @@ void Log_system::logout(){
     log_num--;
     pop_back();
     last_position-= sizeof(Account);
+    accountSystem->stack_kvd.delete_(accountSystem->log_on_now.UserID,0);
     accountSystem->log_on_now=back();
 }
 bool check(const char *in){
@@ -37,12 +38,17 @@ void Log_system::su(char *UserID,char *Password){
     }
     log_num++;
     Account account=accountSystem->get(UserID);
-    if (strcmp(Password,account.Password)!=0){
+    if (Password== nullptr){
+        if (accountSystem->log_on_now.Privilege<=account.Privilege){
+            return;
+        }
+    } else if (strcmp(Password,account.Password)!=0){
         IV();
         return;
     }
     accountSystem->log_on_now=account;
     push_back(account);
+    accountSystem->stack_kvd.insert(account.UserID,0);
 }
 Log_system::Log_system() {
     log_file.open("log_stack",std::ios::in|std::ios::out|std::ios::binary);
@@ -69,6 +75,10 @@ void Log_system::push_back(Account&in){
     log_file.write(reinterpret_cast<char*>(&in), sizeof(Account));
 }
 Account Log_system::back(){
+    if (last_position==0){
+        Account empty;
+        return empty;
+    }
     log_file.seekg(last_position);
     Account account;
     log_file.read(reinterpret_cast<char*>(&account), sizeof(Account));

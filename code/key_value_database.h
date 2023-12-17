@@ -56,6 +56,7 @@ private:
 
 public:
     Key_value_database();
+    Key_value_database(const std::string &filename);
 
     ~Key_value_database();
 
@@ -63,6 +64,7 @@ public:
     void insert(char [65], int);//插入
     void delete_(const char [65], int);//maybe not found
     void find(const char [65]);//找到
+    std::vector<int> find_no_output(const char [65]);//找到
 };
 
 #endif //INC_2074_KEY_VALUE_DATABASE_H

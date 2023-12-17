@@ -20,7 +20,7 @@ private:
     Account_system *accountSystem= nullptr;
     std::fstream log_file;
     int log_num=0;
-    int last_position=0;
+    long long last_position=0;
     void pop_back();
     void push_back(Account&in);
     Account back();

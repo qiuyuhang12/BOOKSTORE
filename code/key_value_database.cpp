@@ -5,6 +5,11 @@
 #include <iostream>
 #include <cstring>
 
+Key_value_database::Key_value_database(const std::string &filename) {
+    catalog_file_name += filename;
+    dictionary_file_name += filename;
+}
+
 template<class T>
 void array_insert(T *array, int size_before_insert, int position) {
     for (int i = size_before_insert; i > position; --i) {
@@ -24,8 +29,8 @@ Key_value_database::Key_value_database() = default;
 Key_value_database::~Key_value_database() = default;
 
 void Key_value_database::initialize(std::string name) {
-    dictionary_file_name=name+"dictionary";
-    catalog_file_name=name+"catalog";
+    dictionary_file_name = name + "dictionary";
+    catalog_file_name = name + "catalog";
     file.open(dictionary_file_name, std::ios::out | std::ios::in | std::ios::binary);
     if (!file) {//目标文件存在吗？
         //新建目标文件：
@@ -178,6 +183,125 @@ void Key_value_database::find(const char key[65]) {
         std::cout << '\n';
         file.close();
         return;
+    }
+}
+
+std::vector<int> Key_value_database::find_no_output(const char key[65]) {
+    std::vector<unsigned long long> maybe;
+    std::vector<int> all;
+    bool find = find_blocks(key, maybe);
+    if (!find) {
+//        std::cout << "null" << std::endl;
+        return all;
+    }
+    Dictionary dictionary;
+    if (maybe.size() == 1) {
+        open(dictionary_file_name);
+        file.seekg(maybe[0]);
+        file.read(reinterpret_cast<char *>(&dictionary), sizeof(Dictionary));
+        file.close();
+        bool flag = false;
+        for (int i = 0; i < dictionary.num; ++i) {
+            int cmp = strcmp(key, dictionary.key[i]);
+            if (cmp < 0) {
+                break;
+            }
+            if (cmp == 0) {
+                flag = true;
+//                std::cout << dictionary.value[i] << ' ';
+                all.push_back(dictionary.value[i]);
+            }
+        }
+//        if (flag){
+//            std::cout << std::endl;
+//        }
+//        else {
+//            std::cout << "null\n";
+//            return false;
+//        }
+        return all;
+    }
+    if (maybe.size() == 2) {
+        open(dictionary_file_name);
+        file.seekg(maybe[0]);
+        file.read(reinterpret_cast<char *>(&dictionary), sizeof(Dictionary));
+        for (int i = 0; i < dictionary.num; ++i) {
+            int cmp = strcmp(key, dictionary.key[i]);
+            if (cmp < 0) {
+                break;
+            }
+            if (cmp == 0) {
+                for (int j = i; j < dictionary.num; ++j) {
+//                    std::cout << dictionary.value[j] << ' ';
+                    all.push_back(dictionary.value[j]);
+//                    return true;
+                }
+                break;
+            }
+        }
+        file.seekg(maybe[1]);
+        file.read(reinterpret_cast<char *>(&dictionary), sizeof(Dictionary));
+        for (int i = 0; i < dictionary.num; ++i) {
+            int cmp = strcmp(key, dictionary.key[i]);
+            if (cmp < 0) {
+                break;
+            }
+            if (cmp == 0) {
+//                std::cout << dictionary.value[i] << ' ';
+                all.push_back(dictionary.value[i]);
+//                return true;
+            }
+        }
+//        std::cout << '\n';
+        file.close();
+        return all;
+    }
+    if (maybe.size() > 2) {
+        open(dictionary_file_name);
+        auto iter = maybe.begin();
+        file.seekg(*iter);
+        iter++;
+        file.read(reinterpret_cast<char *>(&dictionary), sizeof(Dictionary));
+        for (int i = 0; i < dictionary.num; ++i) {
+            int cmp = strcmp(key, dictionary.key[i]);
+            if (cmp < 0) {
+                break;
+            }
+            if (cmp == 0) {
+                for (int j = i; j < dictionary.num; ++j) {
+//                    std::cout << dictionary.value[j] << ' ';
+                    all.push_back(dictionary.value[j]);
+//                    return true;
+                }
+                break;
+            }
+        }
+        while (iter != maybe.end() - 1) {
+            file.seekg(*iter);
+            iter++;
+            file.read(reinterpret_cast<char *>(&dictionary), sizeof(Dictionary));
+            for (int i = 0; i < dictionary.num; ++i) {
+//                std::cout << dictionary.value[i] << ' ';
+                all.push_back(dictionary.value[i]);
+//                return true;
+            }
+        }
+        file.seekg(*iter);
+        file.read(reinterpret_cast<char *>(&dictionary), sizeof(Dictionary));
+        for (int i = 0; i < dictionary.num; ++i) {
+            int cmp = strcmp(key, dictionary.key[i]);
+            if (cmp < 0) {
+                break;
+            }
+            if (cmp == 0) {
+//                std::cout << dictionary.value[i] << ' ';
+                all.push_back(dictionary.value[i]);
+//                return true;
+            }
+        }
+//        std::cout << '\n';
+        file.close();
+        return all;
     }
 }
 
