@@ -9,16 +9,30 @@
 #include "account_system.h"
 #include "blog_system.h"
 #include "log_system.h"
-
+#include <iostream>
+#include <string>
+#include <vector>
+class Piece{//将line分割，依次取出
+public:
+    Piece(std::string line);
+    std::string get();
+private:
+    int time=0;
+    std::string line_;
+    std::vector<int> blank={-1};
+};
 class Main_system {
 public:
-    Main_system();
+    //todo:记得初始化建7账户！
+    //todo:logsys要有accountsys!
+    //todo:怎么构造函数在头文件里？？？
+    Main_system(){
+        logSystem.Log_system_init(accountSystem);
+        char a[5]="root",b[5]="sjtu";
+        useradd(a, b, 7, a);
+    };
 
-    Main_system(Account_system &accountSystem_, Blog_system &blogSystem_, Book_system &bookSystem_,
-                Log_system &logSystem_) : accountSystem(accountSystem_), blogSystem(blogSystem_),
-                                          bookSystem(bookSystem_), logSystem(logSystem_) {}
-
-    //仅保证格式合法，不保证权限合法
+    //仅保证格式合法，不保证权限合法,todo char[]也许有非法字符！！！
     //log
     void logout();
 
@@ -27,7 +41,7 @@ public:
     //account
     void register_(char *UserID, char *Password, char *Username);
 
-    void useradd(char *UserID, char *Password, char *Username);
+    void useradd(char *UserID, char *Password, int Privilege, char *Username);
 
     void passwd(char *UserID, char *NewPassword, char *CurrentPassword = nullptr);
 
@@ -40,9 +54,9 @@ public:
 
     void select(char *ISBN);
 
-    void modify(char *index, index_type);
+    void modify(char *ISBN,char *name,char *author,char *keyword,char* price);
 
-    void import(int Quantity, int TotalCost);
+    void import(int Quantity, int TotalCost_interger,int TotalCost_float);
 
     //blog
     void show_finance(int count = -1);
@@ -54,10 +68,10 @@ public:
     void report_employee();
 
 private:
-    Account_system &accountSystem;
-    Book_system &bookSystem;
-    Blog_system &blogSystem;
-    Log_system &logSystem;
+    Account_system accountSystem;
+    Book_system bookSystem;
+    Blog_system blogSystem;
+    Log_system logSystem;
 };
 
 bool privilege_check(int lowest_privilege);
