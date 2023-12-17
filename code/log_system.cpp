@@ -15,10 +15,6 @@ void Log_system::logout(){
     pop_back();
     last_position-= sizeof(Account);
     accountSystem->log_on_now=back();
-
-//    log_file.seekp(last_position);
-//    Account_system accountSystem;
-//    log_file.write();
 }
 bool check(const char *in){
     int i=0;
@@ -52,6 +48,8 @@ Log_system::Log_system() {
     log_file.open("log_stack",std::ios::in|std::ios::out|std::ios::binary);
     if (!log_file){
         log_file.open("log_stack",std::ios::out|std::ios::binary);
+        log_file.close();
+        log_file.open("log_stack",std::ios::in|std::ios::out|std::ios::binary);
     }
     if (!log_file){
         std::cerr<<"log file wrong";
