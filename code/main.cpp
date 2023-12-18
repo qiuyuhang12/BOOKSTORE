@@ -316,14 +316,20 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
             return;
         }
         for (char i: string1) {
+            if (i>='9'||i<='0'){
+                IV();
+                return;
+            }
             q *= 10;
             q += i - '0';
         }
         for (int i = 0; i < string2.size(); ++i) {
             if (string2[i] == '.') {
-                if (string2[i+1]>'9'||string2[i+1]<'0'||string2[i+2]>'9'||string2[i+2]<'0'||string2[i+3]!=0)
+                if (string2[i+1]>'9'||string2[i+1]<'0'||string2[i+2]>'9'||string2[i+2]<'0'||string2[i+3]!=0){
+                    IV();
+                    return;
+                }
                 tf = (string2[i + 1] - '0') * 10 + string2[i + 2] - '0';
-                break;
             }
             if (string2[i]>'9'||string2[i]<'0'){
                 IV();

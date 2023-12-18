@@ -5,6 +5,7 @@
 #ifndef BOOKSTORE_2023_LOG_SYSTEM_H
 #define BOOKSTORE_2023_LOG_SYSTEM_H
 #include "account_system.h"
+#include "book_system.h"
 #include "fstream"
 #include <iostream>
 class Log_system;
@@ -13,16 +14,18 @@ class Log_system{
 public:
     //保证格式、权限合法，不保证输入（如特定user）存在
     Log_system();
-    void Log_system_init(Account_system&accountSystem);
+    void Log_system_init(Account_system&accountSystem,Book_system&bookSystem);
     void logout();
     void su(char *UserID,char *Password= nullptr);
 private:
     Account_system *accountSystem= nullptr;
+    Book_system *bookSystem= nullptr;
     std::fstream log_file;
     int log_num=0;
     long long last_position=0;
     void pop_back();
     void push_back(Account&in);
     Account back();
+    void clear_selected();
 };
 #endif //BOOKSTORE_2023_LOG_SYSTEM_H

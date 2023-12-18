@@ -23,11 +23,13 @@ private:
 };
 class Main_system {
 public:
+    ////todo::question:select改不改变书库？
     //todo:记得初始化建7账户！
     //todo:logsys要有accountsys!
     //todo:怎么构造函数在头文件里？？？
+    //todo:检索和修改的输入检查！！！！{有重复附加参数为非法指令,附加参数内容为空则操作失败；}
     Main_system(){
-        logSystem.Log_system_init(accountSystem);
+        logSystem.Log_system_init(accountSystem,bookSystem);
         char a[5]="root",b[5]="sjtu";
         useradd(a, b, 7, a);
     };

@@ -1,3 +1,304 @@
 //
 // Created by qiuyuhang on 23-12-16.
 //
+#include "book_system.h"
+#include <algorithm>
+
+void IV() {
+    std::cout << "Invalid\n";
+}
+
+bool check(const char *in) {
+    for (int i = 0; i < 60; ++i) {
+        if (in[i] == '\"') {
+            return true;
+        }
+    }
+    return false;
+}
+
+std::ostream &operator<<(std::ostream &out, Price price1) {
+    out << price1.integer << '.' << price1.float_;
+    return out;
+}
+
+std::ostream &operator<<(std::ostream &out, Book &book) {
+    out << book.ISBN << '\t' << book.BookName << '\t' << book.Author << '\t' << book.Keyword << '\t' << book.price
+        << '\t' << book.storage << '\n';
+    return out;
+}
+
+Price operator+(Price &lhs, Price &rhs) {
+    Price tmp;
+    tmp.integer = lhs.integer + rhs.integer;
+    tmp.float_ = lhs.float_ + rhs.float_;
+    tmp.integer += tmp.float_ / 100;
+    tmp.float_ %= 100;
+    return tmp;
+}
+
+Price operator-(Price &lhs, Price &rhs) {
+    Price tmp;
+    tmp.integer = lhs.integer - rhs.integer;
+    tmp.float_ = lhs.float_ - rhs.float_;
+    if (tmp.float_ < 0) {
+        tmp.float_ += 100;
+        tmp.integer -= 1;
+    }
+    return tmp;
+}
+
+Price operator*(int &lhs, Price &rhs) {
+    Price tmp;
+    tmp.integer = lhs * rhs.integer;
+    tmp.float_ = lhs * rhs.float_;
+    tmp.integer += tmp.float_ / 100;
+    tmp.float_ %= 100;
+    return tmp;
+}
+
+Price &Price::operator+=(Price &rhs) {
+    this->float_ += rhs.float_;
+    this->integer += rhs.integer;
+    integer += float_ / 100;
+    float_ %= 100;
+    return *this;
+}
+
+Price &Price::operator-=(Price &rhs) {
+    this->float_ -= rhs.float_;
+    this->integer -= rhs.integer;
+    integer += float_ / 100;
+    float_ %= 100;
+    return *this;
+}
+
+Book_system::Book_system() : fAuthor("fAuthor"), fBookName("fBookName"), fISBN("fISBN"), fKeyWord("fKeyWord") {
+    books.open("books", std::ios::in | std::ios::out | std::ios::binary);
+    if (!books) {
+        books.open("books", std::ios::out | std::ios::binary);
+        books.close();
+        books.open("books", std::ios::in | std::ios::out | std::ios::binary);
+    }
+    if (!books) {
+        std::cerr << "books file wrong";
+    }
+}
+
+void Book_system::show(char *index, index_type type) {
+    if (index == nullptr) {
+        show_all();
+        return;
+    }
+    std::vector<int> all;
+    switch (type) {
+        case ISBN:
+            all = fISBN.find_no_output(index);
+            break;
+        case name:
+            all = fBookName.find_no_output(index);
+            break;
+        case author:
+            all = fAuthor.find_no_output(index);
+            break;
+        case keyword:
+            all = fKeyWord.find_no_output(index);
+            break;
+    }
+    for (int pos: all) {
+        Book book = get(pos);
+        std::cout << book;
+    }
+}
+
+void Book_system::buy(char *ISBN, int Quantity) {
+    std::vector<int> all = fISBN.find_no_output(ISBN);
+    if (all.empty()) {
+        IV();
+        return;
+    }
+    Book tmp = get(all.front());
+    tmp.storage -= Quantity;
+    if (tmp.storage < 0) {
+        IV();
+        return;
+    }
+    change(all.front(), tmp);
+}
+
+//already done:新旧都需改索引文件
+
+void Book_system::select(char *ISBN) {
+    std::vector<int> all = fISBN.find_no_output(ISBN);
+    Book tmp;
+    if (all.empty()) {
+        strcpy(tmp.ISBN, ISBN);
+        select_position = end_of_book;
+        change(select_position, tmp);
+        end_of_book += sizeof(Book);
+        fISBN.insert(ISBN, select_position);
+    } else {
+        select_position = all.front();
+        tmp = get(all.front());
+    }
+    already_select = true;
+    selected = tmp;
+}
+
+Price to_price(char *price) {
+    std::string string2(price);
+    Price tmp;
+    int ti = 0, tf = 0;
+    for (int i = 0; i < string2.size(); ++i) {
+        if (string2[i] == '.') {
+            if (string2[i + 1] > '9' || string2[i + 1] < '0' || string2[i + 2] > '9' || string2[i + 2] < '0' ||
+                string2[i + 3] != 0) {
+                IV();
+                int a;
+                throw a;
+            }
+            tf = (string2[i + 1] - '0') * 10 + string2[i + 2] - '0';
+        }
+        if (string2[i] > '9' || string2[i] < '0') {
+            IV();
+            int a;
+            throw a;
+            return tmp;
+        }
+        ti *= 10;
+        ti += string2[i];
+    }
+    tmp.integer = ti;
+    tmp.float_ = tf;
+    return tmp;
+}
+
+std::vector<std::string> piece_keyword(char *keyword) {
+    int position = 0;
+    std::vector<std::string> all;
+    std::string tmp;
+    while (keyword[position] != 0) {
+        char now = keyword[position];
+        if (now == '|') {
+            all.push_back(tmp);
+        } else {
+            tmp += now;
+        }
+        position++;
+    }
+    return all;
+}
+
+bool check_repeat(std::vector<std::string> &in) {//有重为true
+    std::sort(in.begin(), in.end());
+    for (int i = 0; i < in.size() - 1; ++i) {
+        if (in[i] == in[i + 1]) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void Book_system::modify(char *ISBN, char *name, char *author, char *keyword, char *price) {
+    if (!already_select) {
+        IV();
+        return;
+    }
+    if (check(name) || check(author) || check(keyword)) {
+        IV();
+        return;
+    }
+    if (strcmp(ISBN, selected.ISBN) == 0) {
+        IV();
+        return;
+    }
+    Book old = selected;//todo测试这是否合法
+    if (price != nullptr) {
+        try {
+            selected.price = to_price(price);
+        } catch (int) {
+            return;
+        }
+    }
+    if (keyword != nullptr) {
+        std::vector<std::string> keys = piece_keyword(keyword);
+        if (check_repeat(keys)) {
+            IV();
+            return;
+        }
+        strcpy(selected.Keyword, keyword);
+        for (int &i: selected.cut_position) {
+            i = 0;
+        }
+        int on_keyword = 0, on_store = 0;
+        while (keyword[on_keyword] != 0) {
+            if (keyword[on_keyword] == '|') {
+                selected.cut_position[on_store] = on_keyword;
+                on_store++;
+            }
+            on_keyword++;
+        }
+        delete_key(old.Keyword, select_position);
+        add_key(keys, select_position);
+    }
+    if (ISBN != nullptr) {
+        strcpy(selected.ISBN, ISBN);
+        fISBN.delete_(old.ISBN, select_position);
+        fISBN.insert(ISBN, select_position);
+    }
+    if (name != nullptr) {
+        strcpy(selected.BookName, name);
+        fBookName.delete_(old.BookName, select_position);
+        fBookName.insert(name, select_position);
+    }
+    if (author != nullptr) {
+        strcpy(selected.Author, author);
+        fAuthor.delete_(old.Author, select_position);
+        fAuthor.insert(author, select_position);
+    }
+    change(select_position, selected);
+}
+
+//todo:blog相关
+void Book_system::import(int Quantity, int TotalCost_integer, int TotalCost_float) {
+    if (!already_select) {
+        IV();
+        return;
+    }
+    selected.storage += Quantity;
+    change(select_position, selected);
+}
+
+void Book_system::delete_key(char *in, int position) {
+    std::vector<std::string> all = piece_keyword(in);
+    for (const auto &i: all) {
+        char key[61] = {0};
+        strcpy(key, i.c_str());
+        fKeyWord.delete_(key, position);
+    }
+}
+
+//todo:key_value_database是64大小数组，如果传小了会不会出问题？一定会！！！嘶，基于strcmp的话可能没问题。
+void Book_system::add_key(std::vector<std::string> &keys, int position) {
+    for (const auto &i: keys) {
+        char key[61] = {0};
+        strcpy(key, i.c_str());
+        fKeyWord.insert(key, position);
+    }
+}
+
+void Book_system::show_all() {
+    
+}
+
+void Book_system::change(int position, Book &new_) {
+    books.seekp(position);
+    books.write(reinterpret_cast<char *>(&new_), sizeof(Book));
+}
+
+Book Book_system::get(int position) {
+    books.seekg(position);
+    Book book;
+    books.read(reinterpret_cast<char *>(&book), sizeof(Book));
+    return book;
+}
