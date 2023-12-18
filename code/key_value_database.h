@@ -56,10 +56,11 @@ private:
 
 public:
     Key_value_database();
-    Key_value_database(const std::string &filename);
+    explicit Key_value_database(const std::string &filename);
 
     ~Key_value_database();
-
+    std::vector<unsigned long long > get_th_to_posi_map();
+    std::vector<int> get_whole_block(unsigned long long i);
     void initialize(std::string);//建立或检查文件
     void insert(char [65], int);//插入
     void delete_(const char [65], int);//maybe not found

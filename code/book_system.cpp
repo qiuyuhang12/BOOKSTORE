@@ -128,6 +128,7 @@ void Book_system::buy(char *ISBN, int Quantity) {
 
 //already done:新旧都需改索引文件
 
+//todo:xiu
 void Book_system::select(char *ISBN) {
     std::vector<int> all = fISBN.find_no_output(ISBN);
     Book tmp;
@@ -288,7 +289,14 @@ void Book_system::add_key(std::vector<std::string> &keys, int position) {
 }
 
 void Book_system::show_all() {
-    
+    std::vector<unsigned long long > pos_in_kvd=fISBN.get_th_to_posi_map();//1->1st的位置序;
+    for (unsigned long long i:pos_in_kvd) {
+        std::vector<int> pos_in_books=fISBN.get_whole_block(i);
+        for (int j:pos_in_books) {
+            Book book= get(j);
+            std::cout<<book;
+        }
+    }
 }
 
 void Book_system::change(int position, Book &new_) {

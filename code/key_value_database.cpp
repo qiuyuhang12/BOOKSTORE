@@ -655,3 +655,29 @@ void Key_value_database::split(unsigned long long block_position_in_dictionary, 
         }
     }
 }
+
+std::vector<unsigned long long > Key_value_database::get_th_to_posi_map() {
+    std::vector<unsigned long long> tmp;
+    open(catalog_file_name);
+    file.seekg(begin_of_catalog);
+    Catalog catalog;
+    file.read(reinterpret_cast<char*>(&catalog), sizeof(Catalog));
+    for (auto i:catalog.address) {
+        tmp.push_back(i);
+    }
+    file.close();
+    return tmp;
+}
+
+std::vector<int> Key_value_database::get_whole_block(unsigned long long position) {
+    std::vector<int> tmp;
+    open(dictionary_file_name);
+    file.seekg(position);
+    Dictionary dictionary;
+    file.read(reinterpret_cast<char*>(&dictionary), sizeof(Dictionary));
+    for (int j = 0; j < dictionary.num; ++j) {
+        tmp.push_back(dictionary.value[j]);
+    }
+    file.close();
+    return tmp;
+}
