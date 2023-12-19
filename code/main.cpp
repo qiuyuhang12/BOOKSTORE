@@ -27,7 +27,7 @@ int main() {
         if (line == "quit" || line == "exit") {
             break;
         }
-        order_analyse(line,mainSystem);
+        order_analyse(line, mainSystem);
     }
     return 0;
 }
@@ -97,6 +97,7 @@ std::string get_information(std::string &in, index_type type) {
 }
 
 void order_analyse(std::string &line, Main_system &mainSystem) {
+    mainSystem.blogSystem.do_str=&line;
     Piece piece(line);
     std::string order = piece.get();
     if (order.empty()) {
@@ -177,6 +178,10 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         mainSystem.delete_(userid);
     } else if (order == "show") {//todo!!!!
         if (string1 == "finance") {
+            if (mainSystem.accountSystem.log_on_now.Privilege<7){
+                IV();
+                return;
+            }
             if (string2.length() > 10 || !string3.empty()) {
                 IV();
                 return;
@@ -258,7 +263,6 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         strcpy(isbn, string1.c_str());
         mainSystem.select(isbn);
     } else if (order == "modify") {
-//TODO
         if (!string6.empty()) {
             IV();
             return;
@@ -293,7 +297,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
             }
         }
         char information[6][61] = {0};
-        char *trans[6]={nullptr};
+        char *trans[6] = {nullptr};
         for (int i = 0; i < unempty; ++i) {
             index_type tmp = indexes[i];
             if (show_form_iv(*(strs[i]), tmp)) {
@@ -303,11 +307,11 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
             strcpy(information[tmp], get_information(*(strs[i]), tmp).c_str());
         }
         for (int i = 1; i < 6; ++i) {
-            if (information[i][0]!=0){
-                trans[i]=information[i];
+            if (information[i][0] != 0) {
+                trans[i] = information[i];
             }
         }
-        mainSystem.modify(trans[1],trans[2],trans[3],trans[4],trans[5]);
+        mainSystem.modify(trans[1], trans[2], trans[3], trans[4], trans[5]);
     } else if (order == "import") {
         int q = 0, ti = 0, tf = 0;
         if (string1.empty() || string2.empty() || string1.size() > 10 || string2.size() > 13
@@ -316,7 +320,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
             return;
         }
         for (char i: string1) {
-            if (i>='9'||i<='0'){
+            if (i >= '9' || i <= '0') {
                 IV();
                 return;
             }
@@ -325,13 +329,14 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         }
         for (int i = 0; i < string2.size(); ++i) {
             if (string2[i] == '.') {
-                if (string2[i+1]>'9'||string2[i+1]<'0'||string2[i+2]>'9'||string2[i+2]<'0'||string2[i+3]!=0){
+                if (string2[i + 1] > '9' || string2[i + 1] < '0' || string2[i + 2] > '9' || string2[i + 2] < '0' ||
+                    string2[i + 3] != 0) {
                     IV();
                     return;
                 }
                 tf = (string2[i + 1] - '0') * 10 + string2[i + 2] - '0';
             }
-            if (string2[i]>'9'||string2[i]<'0'){
+            if (string2[i] > '9' || string2[i] < '0') {
                 IV();
                 return;
             }
@@ -340,12 +345,20 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         }
         mainSystem.import(q, ti, tf);
     } else if (order == "log") {
+        if (mainSystem.accountSystem.log_on_now.Privilege<7){
+            IV();
+            return;
+        }
         if (!string1.empty()) {
             IV();
             return;
         }
         mainSystem.log();
     } else if (order == "report") {
+        if (mainSystem.accountSystem.log_on_now.Privilege<7){
+            IV();
+            return;
+        }
         if (string1.empty() || !string2.empty()) {
             IV();
             return;

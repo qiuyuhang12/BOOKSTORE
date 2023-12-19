@@ -5,6 +5,7 @@
 #ifndef BOOKSTORE_2023_ACCOUNT_SYSTEM_H
 #define BOOKSTORE_2023_ACCOUNT_SYSTEM_H
 
+#include <blog_system.h>
 #include <iostream>
 #include <cstring>
 #include <fstream>
@@ -22,6 +23,7 @@ class Account_system {
 public:
     //保证格式、权限合法，不保证输入（如特定user）存在
     Account_system();
+    void init(Blog_system&blogSystem);
     void register_(char *UserID, char *Password, char *Username);
 
     void useradd(char *UserID, char *Password, int Privilege, char *Username);
@@ -35,6 +37,9 @@ public:
     Account get(char *UserID);
     Key_value_database stack_kvd;
 private:
+    void add_log();
+    void add_employ();
+    Blog_system*blogSystem= nullptr;
     std::fstream file;
     Key_value_database UserID_index_file;
     int last_position_of_account=0;//最后一个account的begin

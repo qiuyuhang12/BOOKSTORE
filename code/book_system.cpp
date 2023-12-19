@@ -3,7 +3,43 @@
 //
 #include "book_system.h"
 #include <algorithm>
-
+void Book_system::add_log(Price &in,Price &out){
+    Do_table doTable;
+    doTable.in=in;
+    doTable.out=out;
+    strcpy(doTable.UserID,accountSystem1->log_on_now.UserID);
+    strcpy(doTable.do_,blogSystem->do_str->c_str());
+    blogSystem->add_log(doTable);
+}
+void Book_system::add_employ(){
+    if (accountSystem1->log_on_now.Privilege!=3){
+        return;
+    }
+    Employee_table employeeTable;
+    strcpy(employeeTable.UserID,accountSystem1->log_on_now.UserID);
+    strcpy(employeeTable.do_,blogSystem->do_str->c_str());
+    blogSystem->add_employee(employeeTable);
+}
+void Book_system::add_finance(Price &in,Price &out,char *ISBN,char*UserID,int Quality){
+    Finance_table financeTable;
+    financeTable.money_in=in;
+    financeTable.money_out=out;
+    strcpy(financeTable.do_,blogSystem->do_str->c_str());
+    strcpy(financeTable.UserID,UserID);
+    strcpy(financeTable.ISBN,ISBN);
+    financeTable.Quality=Quality;
+    blogSystem->add_finance(financeTable);
+}
+void Book_system::add_count(Price &in,Price &out){
+    Count count;
+    count.money_in=in;
+    count.money_out=out;
+    blogSystem->add_count(count);
+}
+void Book_system::init(Blog_system &blogSystem_,Account_system&accountSystem_) {
+    blogSystem=&blogSystem_;
+    accountSystem1=&accountSystem_;
+}
 void IV() {
     std::cout << "Invalid\n";
 }
@@ -86,6 +122,10 @@ Book_system::Book_system() : fAuthor("fAuthor"), fBookName("fBookName"), fISBN("
 }
 
 void Book_system::show(char *index, index_type type) {
+    if (accountSystem1->log_on_now.Privilege<1){
+        IV();
+        return;
+    }
     if (index == nullptr) {
         show_all();
         return;
@@ -109,9 +149,16 @@ void Book_system::show(char *index, index_type type) {
         Book book = get(pos);
         std::cout << book;
     }
+    Price price1,price2;
+    add_log(price1,price2);
+//    add_log(Price(0),Price(0));
 }
 
 void Book_system::buy(char *ISBN, int Quantity) {
+    if (accountSystem1->log_on_now.Privilege<1){
+        IV();
+        return;
+    }
     std::vector<int> all = fISBN.find_no_output(ISBN);
     if (all.empty()) {
         IV();
@@ -124,12 +171,21 @@ void Book_system::buy(char *ISBN, int Quantity) {
         return;
     }
     change(all.front(), tmp);
+    Price price_in,price_out;
+    price_in=Quantity*tmp.price;
+    add_log(price_in,price_out);
+    add_count(price_in,price_out);
+    add_finance(price_in,price_out,ISBN,accountSystem1->log_on_now.UserID,Quantity);
 }
 
 //already done:新旧都需改索引文件
 
 //todo:xiu
 void Book_system::select(char *ISBN) {
+    if (accountSystem1->log_on_now.Privilege<3){
+        IV();
+        return;
+    }
     std::vector<int> all = fISBN.find_no_output(ISBN);
     Book tmp;
     if (all.empty()) {
@@ -144,6 +200,8 @@ void Book_system::select(char *ISBN) {
     }
     already_select = true;
     selected = tmp;
+    Price price_in,price_out;
+    add_log(price_in,price_out);
 }
 
 Price to_price(char *price) {
@@ -201,6 +259,10 @@ bool check_repeat(std::vector<std::string> &in) {//有重为true
 }
 
 void Book_system::modify(char *ISBN, char *name, char *author, char *keyword, char *price) {
+    if (accountSystem1->log_on_now.Privilege<3){
+        IV();
+        return;
+    }
     if (!already_select) {
         IV();
         return;
@@ -258,16 +320,30 @@ void Book_system::modify(char *ISBN, char *name, char *author, char *keyword, ch
         fAuthor.insert(author, select_position);
     }
     change(select_position, selected);
+    Price price_in,price_out;
+    add_log(price_in,price_out);
+    add_employ();
 }
 
 //todo:blog相关
 void Book_system::import(int Quantity, int TotalCost_integer, int TotalCost_float) {
+    if (accountSystem1->log_on_now.Privilege<3){
+        IV();
+        return;
+    }
     if (!already_select) {
         IV();
         return;
     }
     selected.storage += Quantity;
     change(select_position, selected);
+    Price price_in,price_out;
+    price_out.integer=TotalCost_integer;
+    price_out.float_=TotalCost_float;
+    add_log(price_in,price_out);
+    add_count(price_in,price_out);
+    add_finance(price_in,price_out,selected.ISBN,accountSystem1->log_on_now.UserID,Quantity);
+    add_employ();
 }
 
 void Book_system::delete_key(char *in, int position) {

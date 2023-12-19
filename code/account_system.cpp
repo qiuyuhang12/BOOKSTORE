@@ -2,6 +2,25 @@
 // Created by qiuyuhang on 23-12-16.
 //
 #include "account_system.h"
+void Account_system::add_log() {
+    Do_table doTable;
+    strcpy(doTable.UserID,log_on_now.UserID);
+    strcpy(doTable.do_,blogSystem->do_str->c_str());
+    blogSystem->add_log(doTable);
+}
+
+void Account_system::add_employ() {
+    if (log_on_now.Privilege!=3){
+        return;
+    }
+    Employee_table employeeTable;
+    strcpy(employeeTable.UserID,log_on_now.UserID);
+    strcpy(employeeTable.do_,blogSystem->do_str->c_str());
+    blogSystem->add_employee(employeeTable);
+}
+void Account_system::init(Blog_system &blogSystem_) {
+    blogSystem=&blogSystem_;
+}
 void IV() {
     std::cout << "Invalid\n";
 }
@@ -46,12 +65,17 @@ void Account_system::delete_(char *UserID) {
     }
 //    erase(all.front());
     UserID_index_file.delete_(UserID,all.front());
+    add_log();
 }
 
 //void Account_system::erase(int position) {
 //    file.seekp(position);
 //}
 void Account_system::passwd(char *UserID, char *NewPassword, char *CurrentPassword) {
+    if (log_on_now.Privilege<1){
+        IV();
+        return;
+    }
     if (check(NewPassword)){
         IV();
         return;
@@ -78,6 +102,7 @@ void Account_system::passwd(char *UserID, char *NewPassword, char *CurrentPasswo
         tmp.Password[i]=NewPassword[i];
     }
     change(position,tmp);
+    add_log();
 }
 
 Account Account_system::get(int position) {
@@ -92,6 +117,10 @@ void Account_system::change(int position, Account &new_) {
     file.write(reinterpret_cast<char*>(&new_), sizeof(Account));
 }
 void Account_system::useradd(char *UserID, char *Password, int Privilege, char *Username) {
+    if (log_on_now.Privilege<3){
+        IV();
+        return;
+    }
     if (check(UserID) || check(Password)) {
         IV();
         return;
@@ -116,6 +145,8 @@ void Account_system::useradd(char *UserID, char *Password, int Privilege, char *
     change(last_position_of_account,new_);
     UserID_index_file.insert(UserID,last_position_of_account);
     last_position_of_account+= sizeof(Account);
+    add_log();
+    add_employ();
 }
 
 void Account_system::register_(char *UserID, char *Password, char *Username) {
@@ -135,6 +166,7 @@ void Account_system::register_(char *UserID, char *Password, char *Username) {
     change(last_position_of_account,new_);
     UserID_index_file.insert(UserID,last_position_of_account);
     last_position_of_account+= sizeof(Account);
+    add_log();
 }
 
 Account Account_system::get(char *UserID) {

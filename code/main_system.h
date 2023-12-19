@@ -29,9 +29,12 @@ public:
     //todo:怎么构造函数在头文件里？？？
     //todo:检索和修改的输入检查！！！！{有重复附加参数为非法指令,附加参数内容为空则操作失败；}
     Main_system(){
-        logSystem.Log_system_init(accountSystem,bookSystem);
+        logSystem.Log_system_init(accountSystem,bookSystem,blogSystem);
+        accountSystem.init(blogSystem);
+        bookSystem.init(blogSystem,accountSystem);
         char a[5]="root",b[5]="sjtu";
-        useradd(a, b, 7, a);
+        useradd(a, b, 7, a);//todo::换个位置！也许不是第一次测评！
+        //todo:栈第一个放空账户！
     };
 
     //仅保证格式合法，不保证权限合法,todo char[]也许有非法字符！！！
@@ -69,13 +72,14 @@ public:
 
     void report_employee();
 
-private:
-    Account_system accountSystem;
-    Book_system bookSystem;
     Blog_system blogSystem;
+    Account_system accountSystem;
+
+private:
+    Book_system bookSystem;
     Log_system logSystem;
 };
-
+//todo:权限检查！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
 bool privilege_check(int lowest_privilege);
 
 #endif //BOOKSTORE_2023_MAIN_SYSTEM_H

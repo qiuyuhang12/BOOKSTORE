@@ -8,6 +8,8 @@
 #include <fstream>
 #include <cstring>
 #include <key_value_database.h>
+#include <blog_system.h>
+#include "account_system.h"
 enum index_type {
     none, ISBN, name, author, keyword, price
 };
@@ -15,6 +17,11 @@ enum index_type {
 class Book_system;
 
 struct Price{
+    Price()=default;
+    //todo构造写头文件里？？
+    Price(int a){
+        integer=a;
+    }
     int integer=0;
     int float_=0;
     Price& operator+=(Price&rhs);
@@ -39,6 +46,7 @@ class Book_system {
 public:
     //保证格式、权限合法，不保证输入（如特定书籍）存在
     Book_system();
+    void init(Blog_system&blogSystem,Account_system&accountSystem);
     void show(char *index, index_type);
 
     void buy(char *ISBN, int Quantity);
@@ -52,6 +60,12 @@ public:
 
 
 private:
+    void add_log(Price &in,Price &out);
+    void add_employ();
+    void add_finance(Price &in,Price &out,char *ISBN,char*UserID,int Quality);
+    void add_count(Price &in,Price &out);
+    Blog_system*blogSystem= nullptr;
+    Account_system*accountSystem1= nullptr;
     Book selected;
     int select_position=0;
     int end_of_book=0;

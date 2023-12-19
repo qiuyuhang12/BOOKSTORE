@@ -8,16 +8,20 @@
 #include "book_system.h"
 #include "fstream"
 #include <iostream>
+#include <blog_system.h>
+
 class Log_system;
 struct Log_stack;
 class Log_system{
 public:
     //保证格式、权限合法，不保证输入（如特定user）存在
     Log_system();
-    void Log_system_init(Account_system&accountSystem,Book_system&bookSystem);
+    void Log_system_init(Account_system&accountSystem,Book_system&bookSystem,Blog_system&blogSystem);
     void logout();
     void su(char *UserID,char *Password= nullptr);
 private:
+    void add_log();
+    Blog_system *blogSystem= nullptr;
     Account_system *accountSystem= nullptr;
     Book_system *bookSystem= nullptr;
     std::fstream log_file;

@@ -4,6 +4,12 @@
 #include "log_system.h"
 #include <cstring>
 
+void Log_system::add_log() {
+    Do_table doTable;
+    strcpy(doTable.UserID,accountSystem->log_on_now.UserID);
+    strcpy(doTable.do_,blogSystem->do_str->c_str());
+    blogSystem->add_log(doTable);
+}
 void IV() {
     std::cout << "Invalid\n";
 }
@@ -19,12 +25,17 @@ void Log_system::logout() {
         IV();
         return;
     }
+    if (accountSystem->log_on_now.Privilege<1){
+        IV();
+        return;
+    }
     log_num--;
     pop_back();
     last_position -= sizeof(Account);
     accountSystem->stack_kvd.delete_(accountSystem->log_on_now.UserID, 0);
     accountSystem->log_on_now = back();
     clear_selected();
+    add_log();
 }
 
 bool check(const char *in) {
@@ -61,6 +72,7 @@ void Log_system::su(char *UserID, char *Password) {
     push_back(account);
     accountSystem->stack_kvd.insert(account.UserID, 0);
     clear_selected();
+    add_log();
 }
 
 Log_system::Log_system() {
@@ -75,9 +87,10 @@ Log_system::Log_system() {
     }
 }
 
-void Log_system::Log_system_init(Account_system &accountSystem_, Book_system &bookSystem1_) {
+void Log_system::Log_system_init(Account_system &accountSystem_, Book_system &bookSystem1_, Blog_system &blogSystem_) {
     accountSystem = &accountSystem_;
     bookSystem = &bookSystem1_;
+    blogSystem = &blogSystem_;
 }
 
 void Log_system::pop_back() {
