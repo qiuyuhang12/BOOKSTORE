@@ -39,6 +39,7 @@ bool check_num_letter_(const char *in){
     return false;
 }
 Account_system::Account_system() : UserID_index_file("UserID_index_file"){
+    UserID_index_file.initialize("UserID_index_file");
     char emp[31]={0};
     loger_num[emp]=1;
     file.open("accounts",std::ios::in|std::ios::out|std::ios::binary);
@@ -47,7 +48,7 @@ Account_system::Account_system() : UserID_index_file("UserID_index_file"){
         file.close();
         file.open("accounts",std::ios::in|std::ios::out|std::ios::binary);
         char a[31]="root",b[31]="sjtu";
-        useradd(a, b, 7, a);
+        useradd_hard(a, b, 7, a);
     }
     if (!file){
         std::cerr<<"log file wrong";
@@ -59,7 +60,7 @@ void Account_system::delete_(char *UserID) {
         IV();
         return;
     }
-    if (loger_num[UserID]==0){
+    if (loger_num[UserID]!=0){
         IV();
         loger_num.erase(UserID);
         return;
@@ -126,6 +127,7 @@ void Account_system::change(int position, Account &new_) {
     file.seekp(position);
     file.write(reinterpret_cast<char*>(&new_), sizeof(Account));
 }
+
 void Account_system::useradd(char *UserID, char *Password, int Privilege, char *Username) {
     if (log_on_now.Privilege<3){
         IV();
@@ -159,6 +161,16 @@ void Account_system::useradd(char *UserID, char *Password, int Privilege, char *
     add_employ();
 }
 
+void Account_system::useradd_hard(char *UserID, char *Password, int Privilege, char *Username) {
+    Account new_;
+    strcpy(new_.Password,Password);
+    strcpy(new_.UserID,UserID);
+    strcpy(new_.Username,Username);
+    new_.Privilege=Privilege;
+    change(last_position_of_account,new_);
+    UserID_index_file.insert(UserID,last_position_of_account);
+    last_position_of_account+= sizeof(Account);
+}
 void Account_system::register_(char *UserID, char *Password, char *Username) {
     if (check_num_letter_(UserID) || check_num_letter_(Password)) {
         IV();
@@ -180,8 +192,14 @@ void Account_system::register_(char *UserID, char *Password, char *Username) {
 }
 
 Account Account_system::get(char *UserID) {
-    int position=UserID_index_file.find_no_output(UserID).front();
+    auto item=UserID_index_file.find_no_output(UserID);
+    if (item.empty()){
+//        IV();
+        throw Err();
+    }
+    int position=item.front();
     Account tmp;
     file.seekg(position);
     file.read(reinterpret_cast<char*>(&tmp), sizeof(Account));
+    return tmp;
 }

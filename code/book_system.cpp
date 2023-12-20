@@ -45,6 +45,9 @@ void Book_system::init(Blog_system &blogSystem_,Account_system&accountSystem_) {
 //}
 
 bool check_no_quote(const char *in) {
+    if (in==nullptr){
+        return false;
+    }
     for (int i = 0; i < 60; ++i) {
         if (in[i] == '\"') {
             return true;
@@ -65,6 +68,10 @@ Book_system::Book_system() : fAuthor("fAuthor"), fBookName("fBookName"), fISBN("
     if (!books) {
         std::cerr << "books file wrong";
     }
+    fISBN.initialize("fISBN");
+    fKeyWord.initialize("fKeyWord");
+    fAuthor.initialize("fAuthor");
+    fBookName.initialize("fBookName");
 }
 
 void Book_system::show(char *index, index_type type) {
@@ -172,7 +179,7 @@ Price to_price(char *price) {
             return tmp;
         }
         ti *= 10;
-        ti += string2[i];
+        ti += string2[i]-'0';
     }
     tmp.integer = ti;
     tmp.float_ = tf;
@@ -196,6 +203,9 @@ std::vector<std::string> piece_keyword(char *keyword) {
 }
 
 bool check_repeat(std::vector<std::string> &in) {//有重为true
+    if (in.empty()){
+        return false;
+    }
     std::sort(in.begin(), in.end());
     for (int i = 0; i < in.size() - 1; ++i) {
         if (in[i] == in[i + 1]) {
@@ -218,9 +228,11 @@ void Book_system::modify(char *ISBN, char *name, char *author, char *keyword, ch
         IV();
         return;
     }
-    if (strcmp(ISBN, selected.ISBN) == 0) {
-        IV();
-        return;
+    if (ISBN!= nullptr) {
+        if (strcmp(ISBN, selected.ISBN) == 0) {
+            IV();
+            return;
+        }
     }
     Book old = selected;//todo测试这是否合法
     if (price != nullptr) {
@@ -356,11 +368,15 @@ Book Book_system::get(int position) {
 std::set<Book, cmp> Book_system::get_all_sorted() {
     books.flush();
     std::set<Book,cmp> tmp;
-    books.seekg(std::ios::beg);
+    books.seekg(0,std::ios::beg);
+    Book in;
     while (!books.eof()){
-        Book book;
-        books.read(reinterpret_cast<char*>(&book), sizeof(Book));
-        tmp.insert(book);
+        Book book=in;
+        books.read(reinterpret_cast<char*>(&in), sizeof(Book));
+        if (strcmp(book.ISBN,in.ISBN)==0){
+            break;
+        }
+        tmp.insert(in);
     }
     books.close();
     books.open("books",std::ios::in|std::ios::out|std::ios::binary);

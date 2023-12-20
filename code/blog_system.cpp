@@ -4,6 +4,10 @@
 #include "blog_system.h"
 
 std::ostream &operator<<(std::ostream &out, Price price1) {
+    if (price1.float_/10==0) {
+        out << price1.integer << '.' <<0<< price1.float_;
+        return out;
+    }
     out << price1.integer << '.' << price1.float_;
     return out;
 }
@@ -90,7 +94,7 @@ void Blog_system::show_finance(int count){
     if (count==-1){
         count_file.seekg(-long(sizeof(Count)),std::ios::end);
         Count count1;
-        count_file.write(reinterpret_cast<char*>(&count1), sizeof(Count));
+        count_file.read(reinterpret_cast<char*>(&count1), sizeof(Count));
         std::cout<<"+ "<<count1.money_in<<" - "<<count1.money_out<<'\n';
         return;
     }
@@ -99,7 +103,7 @@ void Blog_system::show_finance(int count){
         return;
     }
     int num=0;
-    count_file.seekg(std::ios::beg);
+    count_file.seekg(0,std::ios::beg);
     count_file.read(reinterpret_cast<char*>(&num), sizeof(int));
     if (num<count){
         IV();
@@ -107,7 +111,7 @@ void Blog_system::show_finance(int count){
     }
     count_file.seekg((count-1)*long(sizeof(Count)));
     Count count1;
-    count_file.write(reinterpret_cast<char*>(&count1), sizeof(Count));
+    count_file.read(reinterpret_cast<char*>(&count1), sizeof(Count));
     std::cout<<"+ "<<count1.money_in<<" - "<<count1.money_out<<'\n';
 }
 
@@ -121,28 +125,36 @@ void Blog_system::report_employee(){}
 
 void Blog_system::add_count(Count &count){
     int num=0;
-    count_file.seekg(std::ios::beg);
+    count_file.seekg(0,std::ios::beg);
     count_file.read(reinterpret_cast<char*>(&num), sizeof(int));
     num++;
-    count_file.seekp(std::ios::beg);
+    count_file.seekp(0,std::ios::beg);
     count_file.write(reinterpret_cast<char*>(&num), sizeof(int));
-    count_file.seekg(-1*long(sizeof(Count)),std::ios::end);
     Count last;
-    count_file.read(reinterpret_cast<char*>(&last), sizeof(Count));
+    if (num!=1) {
+        count_file.seekg(-1 * long(sizeof(Count)), std::ios::end);
+        count_file.read(reinterpret_cast<char *>(&last), sizeof(Count));
+    }
     last.money_out+=count.money_out;
     last.money_in+=count.money_in;
-    count_file.seekp(std::ios::end);
+    count_file.seekp(0,std::ios::end);
     count_file.write(reinterpret_cast<char*>(&last), sizeof(Count));
 }
 void Blog_system::add_finance(Finance_table&financeTable){
-    report_finance_file.seekp(std::ios::end);
+    report_finance_file.seekp(0,std::ios::end);
     report_finance_file.write(reinterpret_cast<char*>(&financeTable), sizeof(Finance_table));
 }
 void Blog_system::add_employee(Employee_table&employeeTable){
-    report_employee_file.seekp(std::ios::end);
+    report_employee_file.seekp(0,std::ios::end);
     report_employee_file.write(reinterpret_cast<char*>(&employeeTable), sizeof(Employee_table));
 }
 void Blog_system::add_log(Do_table&doTable){
-    log_file.seekp(std::ios::end);
+    log_file.seekp(0,std::ios::end);
     log_file.write(reinterpret_cast<char*>(&doTable), sizeof(Do_table));
 }
+
+//su root sjtu
+//select a
+//import 1000 99.99
+//show
+//show finance

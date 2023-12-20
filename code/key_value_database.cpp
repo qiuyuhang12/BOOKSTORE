@@ -303,6 +303,7 @@ std::vector<int> Key_value_database::find_no_output(const char key[65]) {
         file.close();
         return all;
     }
+    return all;
 }
 
 bool Key_value_database::find_blocks(const char key[65], std::vector<unsigned long long> &maybe_have) {

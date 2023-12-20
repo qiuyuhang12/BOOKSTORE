@@ -27,7 +27,11 @@ int main() {
         if (line == "quit" || line == "exit") {
             break;
         }
-        order_analyse(line, mainSystem);
+        try {
+            order_analyse(line, mainSystem);
+        } catch (Err) {
+            IV();
+        }
     }
     return 0;
 }
@@ -426,7 +430,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
             return;
         }
         for (char i: string1) {
-            if (i >= '9' || i <= '0') {
+            if (i > '9' || i < '0') {
                 IV();
                 return;
             }
@@ -452,7 +456,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
                 return;
             }
             ti *= 10;
-            ti += string2[i];
+            ti += string2[i]-'0';
         }
         mainSystem.import(q, ti, tf);
     } else if (order == "log") {

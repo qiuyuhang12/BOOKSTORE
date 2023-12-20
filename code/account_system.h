@@ -42,6 +42,7 @@ public:
     Account get(char *UserID);
     std::unordered_map<char*,int> loger_num;
 private:
+    void useradd_hard(char *UserID, char *Password, int Privilege, char *Username);
     void add_log();
     void add_employ();
     Blog_system*blogSystem= nullptr;

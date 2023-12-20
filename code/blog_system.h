@@ -16,7 +16,7 @@ void IV();
 
 //财务
 
-
+struct Err{};
 struct Price {
 //    Price()=default;
 
