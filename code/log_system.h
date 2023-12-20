@@ -9,9 +9,10 @@
 #include "fstream"
 #include <iostream>
 #include <blog_system.h>
-
+//#include <map>
+#include <unordered_map>
 class Log_system;
-struct Log_stack;
+//struct Log_stack;
 class Log_system{
 public:
     //保证格式、权限合法，不保证输入（如特定user）存在
@@ -24,8 +25,9 @@ private:
     Blog_system *blogSystem= nullptr;
     Account_system *accountSystem= nullptr;
     Book_system *bookSystem= nullptr;
-    std::fstream log_file;
-    int log_num=0;
+    std::vector<Account> loger_stack;
+//    std::fstream log_file;
+    int log_num=1;
     long long last_position=0;
     void pop_back();
     void push_back(Account&in);

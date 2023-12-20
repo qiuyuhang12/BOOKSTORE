@@ -21,10 +21,10 @@ void Account_system::add_employ() {
 void Account_system::init(Blog_system &blogSystem_) {
     blogSystem=&blogSystem_;
 }
-void IV() {
-    std::cout << "Invalid\n";
-}
-bool check(const char *in){
+//void IV() {
+//    std::cout << "Invalid\n";
+//}
+bool check_num_letter___(const char *in){
     int i=0;
     while (in[i]!=0){
         char o=in[i];
@@ -38,26 +38,36 @@ bool check(const char *in){
     }
     return false;
 }
-Account_system::Account_system() : UserID_index_file("UserID_index_file"), stack_kvd("stack_kvd"){
+Account_system::Account_system() : UserID_index_file("UserID_index_file"){
+    char emp[31]={0};
+    loger_num[emp]=1;
     file.open("accounts",std::ios::in|std::ios::out|std::ios::binary);
     if (!file){
         file.open("accounts",std::ios::out|std::ios::binary);
         file.close();
         file.open("accounts",std::ios::in|std::ios::out|std::ios::binary);
+        char a[31]="root",b[31]="sjtu";
+        useradd(a, b, 7, a);
     }
     if (!file){
         std::cerr<<"log file wrong";
     }
+//    useradd()
 }
 void Account_system::delete_(char *UserID) {
     if (log_on_now.Privilege!=7){
         IV();
         return;
     }
-    if (!stack_kvd.find_no_output(UserID).empty()){
+    if (loger_num[UserID]==0){
         IV();
+        loger_num.erase(UserID);
         return;
     }
+//    if (!stack_kvd.find_no_output(UserID).empty()){
+//        IV();
+//        return;
+//    }
     std::vector<int> all=UserID_index_file.find_no_output(UserID);
     if (all.empty()){
         IV();
@@ -76,7 +86,7 @@ void Account_system::passwd(char *UserID, char *NewPassword, char *CurrentPasswo
         IV();
         return;
     }
-    if (check(NewPassword)){
+    if (check_num_letter___(NewPassword)){
         IV();
         return;
     }
@@ -121,7 +131,7 @@ void Account_system::useradd(char *UserID, char *Password, int Privilege, char *
         IV();
         return;
     }
-    if (check(UserID) || check(Password)) {
+    if (check_num_letter___(UserID) || check_num_letter___(Password)) {
         IV();
         return;
     }
@@ -150,7 +160,7 @@ void Account_system::useradd(char *UserID, char *Password, int Privilege, char *
 }
 
 void Account_system::register_(char *UserID, char *Password, char *Username) {
-    if (check(UserID) || check(Password)) {
+    if (check_num_letter___(UserID) || check_num_letter___(Password)) {
         IV();
         return;
     }

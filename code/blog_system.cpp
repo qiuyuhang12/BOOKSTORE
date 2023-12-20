@@ -3,6 +3,61 @@
 //
 #include "blog_system.h"
 
+std::ostream &operator<<(std::ostream &out, Price price1) {
+    out << price1.integer << '.' << price1.float_;
+    return out;
+}
+
+std::ostream &operator<<(std::ostream &out, Book &book) {
+    out << book.ISBN << '\t' << book.BookName << '\t' << book.Author << '\t' << book.Keyword << '\t' << book.price
+        << '\t' << book.storage << '\n';
+    return out;
+}
+
+Price operator+(Price &lhs, Price &rhs) {
+    Price tmp;
+    tmp.integer = lhs.integer + rhs.integer;
+    tmp.float_ = lhs.float_ + rhs.float_;
+    tmp.integer += tmp.float_ / 100;
+    tmp.float_ %= 100;
+    return tmp;
+}
+
+Price operator-(Price &lhs, Price &rhs) {
+    Price tmp;
+    tmp.integer = lhs.integer - rhs.integer;
+    tmp.float_ = lhs.float_ - rhs.float_;
+    if (tmp.float_ < 0) {
+        tmp.float_ += 100;
+        tmp.integer -= 1;
+    }
+    return tmp;
+}
+
+Price operator*(int &lhs, Price &rhs) {
+    Price tmp;
+    tmp.integer = lhs * rhs.integer;
+    tmp.float_ = lhs * rhs.float_;
+    tmp.integer += tmp.float_ / 100;
+    tmp.float_ %= 100;
+    return tmp;
+}
+
+Price &Price::operator+=(Price &rhs) {
+    this->float_ += rhs.float_;
+    this->integer += rhs.integer;
+    integer += float_ / 100;
+    float_ %= 100;
+    return *this;
+}
+
+Price &Price::operator-=(Price &rhs) {
+    this->float_ -= rhs.float_;
+    this->integer -= rhs.integer;
+    integer += float_ / 100;
+    float_ %= 100;
+    return *this;
+}
 void IV() {
     std::cout << "Invalid\n";
 }
@@ -29,17 +84,19 @@ Blog_system::Blog_system() {
     file_init(log_file,"log_file");
     file_init(report_employee_file,"report_employee_file");
     file_init(report_finance_file,"report_finance_file");
+}
 
-}//todo记得count写个0
 void Blog_system::show_finance(int count){
     if (count==-1){
         count_file.seekg(-long(sizeof(Count)),std::ios::end);
         Count count1;
         count_file.write(reinterpret_cast<char*>(&count1), sizeof(Count));
         std::cout<<"+ "<<count1.money_in<<" - "<<count1.money_out<<'\n';
+        return;
     }
     if (count==0){
         std::cout<<'\n';
+        return;
     }
     int num=0;
     count_file.seekg(std::ios::beg);

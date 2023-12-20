@@ -10,15 +10,20 @@
 #include <cstring>
 #include <fstream>
 #include <key_value_database.h>
+#include <unordered_map>
 class Account_system;
-
+class Blog_system;
 struct Account {
     char UserID[31] = {0};
     char Password[31] = {0};
     char Username[31] = {0};
     int Privilege = 0;
 };
-
+//struct cmp{
+//    bool operator ()(Account&lhs,Account&rhs)const{
+//        if (strcpy(lhs.UserID,))
+//    }
+//};
 class Account_system {
 public:
     //保证格式、权限合法，不保证输入（如特定user）存在
@@ -35,7 +40,7 @@ public:
     Account log_on_now;
 
     Account get(char *UserID);
-    Key_value_database stack_kvd;
+    std::unordered_map<char*,int> loger_num;
 private:
     void add_log();
     void add_employ();

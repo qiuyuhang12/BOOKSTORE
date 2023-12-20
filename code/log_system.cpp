@@ -6,13 +6,13 @@
 
 void Log_system::add_log() {
     Do_table doTable;
-    strcpy(doTable.UserID,accountSystem->log_on_now.UserID);
-    strcpy(doTable.do_,blogSystem->do_str->c_str());
+    strcpy(doTable.UserID, accountSystem->log_on_now.UserID);
+    strcpy(doTable.do_, blogSystem->do_str->c_str());
     blogSystem->add_log(doTable);
 }
-void IV() {
-    std::cout << "Invalid\n";
-}
+//void IV() {
+//    std::cout << "Invalid\n";
+//}
 
 void Log_system::clear_selected() {
 //    Book book;
@@ -21,18 +21,22 @@ void Log_system::clear_selected() {
 }
 
 void Log_system::logout() {
-    if (log_num == 0) {
+    if (log_num == 1) {
         IV();
         return;
     }
-    if (accountSystem->log_on_now.Privilege<1){
+    if (accountSystem->log_on_now.Privilege < 1) {
         IV();
         return;
     }
     log_num--;
     pop_back();
     last_position -= sizeof(Account);
-    accountSystem->stack_kvd.delete_(accountSystem->log_on_now.UserID, 0);
+//    accountSystem->stack_kvd.delete_(accountSystem->log_on_now.UserID, 0);
+    accountSystem->loger_num[accountSystem->log_on_now.UserID]--;
+    if (accountSystem->loger_num[accountSystem->log_on_now.UserID] == 0) {
+        accountSystem->loger_num.erase(accountSystem->log_on_now.UserID);
+    }
     accountSystem->log_on_now = back();
     clear_selected();
     add_log();
@@ -70,47 +74,59 @@ void Log_system::su(char *UserID, char *Password) {
     }
     accountSystem->log_on_now = account;
     push_back(account);
-    accountSystem->stack_kvd.insert(account.UserID, 0);
+//    accountSystem->stack_kvd.insert(account.UserID, 0);
+    accountSystem->loger_num[accountSystem->log_on_now.UserID]++;
     clear_selected();
     add_log();
 }
 
 Log_system::Log_system() {
-    log_file.open("log_stack", std::ios::in | std::ios::out | std::ios::binary);
-    if (!log_file) {
-        log_file.open("log_stack", std::ios::out | std::ios::binary);
-        log_file.close();
-        log_file.open("log_stack", std::ios::in | std::ios::out | std::ios::binary);
-    }
-    if (!log_file) {
-        std::cerr << "log file wrong";
-    }
+
+    Account empty;
+    loger_stack.push_back(empty);
+//    log_file.open("log_stack", std::ios::in | std::ios::out | std::ios::binary);
+//    if (!log_file) {
+//        log_file.open("log_stack", std::ios::out | std::ios::binary);
+//        log_file.close();
+//        log_file.open("log_stack", std::ios::in | std::ios::out | std::ios::binary);
+//    }
+//    if (!log_file) {
+//        std::cerr << "log file wrong";
+//    }
 }
 
 void Log_system::Log_system_init(Account_system &accountSystem_, Book_system &bookSystem1_, Blog_system &blogSystem_) {
     accountSystem = &accountSystem_;
     bookSystem = &bookSystem1_;
     blogSystem = &blogSystem_;
+    char UserID[31] = {0};
+    accountSystem->loger_num[UserID] = 1;
 }
 
 void Log_system::pop_back() {
-    Account account;
-    log_file.seekp(last_position);
-    log_file.write(reinterpret_cast<char *>(&account), sizeof(Account));
+    char *id = loger_stack.back().UserID;
+    loger_stack.pop_back();
+//    log_num[]--;
+
+//    Account account;
+//    log_file.seekp(last_position);
+//    log_file.write(reinterpret_cast<char *>(&account), sizeof(Account));
 }
 
 void Log_system::push_back(Account &in) {
-    log_file.seekp(last_position);
-    log_file.write(reinterpret_cast<char *>(&in), sizeof(Account));
+    loger_stack.push_back(in);
+//    log_file.seekp(last_position);
+//    log_file.write(reinterpret_cast<char *>(&in), sizeof(Account));
 }
 
 Account Log_system::back() {
-    if (last_position == 0) {
-        Account empty;
-        return empty;
-    }
-    log_file.seekg(last_position);
-    Account account;
-    log_file.read(reinterpret_cast<char *>(&account), sizeof(Account));
-    return account;
+    return loger_stack.back();
+//    if (last_position == 0) {
+//        Account empty;
+//        return empty;
+//    }
+//    log_file.seekg(last_position);
+//    Account account;
+//    log_file.read(reinterpret_cast<char *>(&account), sizeof(Account));
+//    return account;
 }

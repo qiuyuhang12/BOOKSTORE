@@ -14,7 +14,7 @@ bool show_form_iv(std::string &in, index_type type);
 std::string get_information(std::string &in, index_type type);
 
 //输出Invalid
-void IV();
+//void IV();
 
 int main() {
     Main_system mainSystem;
@@ -32,9 +32,9 @@ int main() {
     return 0;
 }
 
-void IV() {
-    std::cout << "Invalid\n";
-}
+//void IV() {
+//    std::cout << "Invalid\n";
+//}
 
 bool show_form_iv(std::string &in, index_type type) {
     bool rsl = false;
@@ -176,7 +176,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         }
         strcpy(userid, string1.c_str());
         mainSystem.delete_(userid);
-    } else if (order == "show") {//todo!!!!
+    } else if (order == "show") {
         if (string1 == "finance") {
             if (mainSystem.accountSystem.log_on_now.Privilege<7){
                 IV();

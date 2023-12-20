@@ -6,12 +6,55 @@
 #define BOOKSTORE_2023_BLOG_SYSTEM_H
 
 #include <key_value_database.h>
-#include "book_system.h"
+//#include "book_system.h"
 
+#include "iostream"
+//struct Price;
+//struct Book;
 class Blog_system;
-
+void IV();
 
 //财务
+
+
+struct Price {
+//    Price()=default;
+
+//    Price(int a){
+//        integer=a;
+//    }
+    int integer = 0;
+    int float_ = 0;
+
+    Price &operator+=(Price &rhs);
+
+    Price &operator-=(Price &rhs);
+
+    friend std::ostream &operator<<(std::ostream &out, Price price1);
+
+    friend Price operator+(Price &lhs, Price &rhs);
+
+    friend Price operator-(Price &lhs, Price &rhs);
+
+    friend Price operator*(int &lhs, Price &rhs);
+};
+struct Book {
+    char ISBN[21] = {0};
+    char BookName[61] = {0};
+    char Author[61] = {0};
+    char Keyword[61] = {0};
+    int cut_position[30] = {0};//todo有存在必要吗？
+    Price price;
+    long long storage = 0;
+
+    friend std::ostream &operator<<(std::ostream &out, Book &book);
+};
+Price operator+(Price &lhs, Price &rhs);
+
+Price operator-(Price &lhs, Price &rhs);
+
+Price operator*(int &lhs, Price &rhs);
+
 struct Count{
     Price money_in;
     Price money_out;
@@ -38,7 +81,7 @@ struct Do_table{
 class Blog_system {
 public:
     //保证格式、权限合法，不保证输入（如特定user）存在
-    Blog_system();//todo初始化文件流
+    Blog_system();
     void show_finance(int count = -1);
 
     void log();

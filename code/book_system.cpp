@@ -40,11 +40,11 @@ void Book_system::init(Blog_system &blogSystem_,Account_system&accountSystem_) {
     blogSystem=&blogSystem_;
     accountSystem1=&accountSystem_;
 }
-void IV() {
-    std::cout << "Invalid\n";
-}
+//void IV() {
+//    std::cout << "Invalid\n";
+//}
 
-bool check(const char *in) {
+bool check_no_quote(const char *in) {
     for (int i = 0; i < 60; ++i) {
         if (in[i] == '\"') {
             return true;
@@ -53,61 +53,7 @@ bool check(const char *in) {
     return false;
 }
 
-std::ostream &operator<<(std::ostream &out, Price price1) {
-    out << price1.integer << '.' << price1.float_;
-    return out;
-}
 
-std::ostream &operator<<(std::ostream &out, Book &book) {
-    out << book.ISBN << '\t' << book.BookName << '\t' << book.Author << '\t' << book.Keyword << '\t' << book.price
-        << '\t' << book.storage << '\n';
-    return out;
-}
-
-Price operator+(Price &lhs, Price &rhs) {
-    Price tmp;
-    tmp.integer = lhs.integer + rhs.integer;
-    tmp.float_ = lhs.float_ + rhs.float_;
-    tmp.integer += tmp.float_ / 100;
-    tmp.float_ %= 100;
-    return tmp;
-}
-
-Price operator-(Price &lhs, Price &rhs) {
-    Price tmp;
-    tmp.integer = lhs.integer - rhs.integer;
-    tmp.float_ = lhs.float_ - rhs.float_;
-    if (tmp.float_ < 0) {
-        tmp.float_ += 100;
-        tmp.integer -= 1;
-    }
-    return tmp;
-}
-
-Price operator*(int &lhs, Price &rhs) {
-    Price tmp;
-    tmp.integer = lhs * rhs.integer;
-    tmp.float_ = lhs * rhs.float_;
-    tmp.integer += tmp.float_ / 100;
-    tmp.float_ %= 100;
-    return tmp;
-}
-
-Price &Price::operator+=(Price &rhs) {
-    this->float_ += rhs.float_;
-    this->integer += rhs.integer;
-    integer += float_ / 100;
-    float_ %= 100;
-    return *this;
-}
-
-Price &Price::operator-=(Price &rhs) {
-    this->float_ -= rhs.float_;
-    this->integer -= rhs.integer;
-    integer += float_ / 100;
-    float_ %= 100;
-    return *this;
-}
 
 Book_system::Book_system() : fAuthor("fAuthor"), fBookName("fBookName"), fISBN("fISBN"), fKeyWord("fKeyWord") {
     books.open("books", std::ios::in | std::ios::out | std::ios::binary);
@@ -267,7 +213,7 @@ void Book_system::modify(char *ISBN, char *name, char *author, char *keyword, ch
         IV();
         return;
     }
-    if (check(name) || check(author) || check(keyword)) {
+    if (check_no_quote(name) || check_no_quote(author) || check_no_quote(keyword)) {
         IV();
         return;
     }
@@ -325,7 +271,7 @@ void Book_system::modify(char *ISBN, char *name, char *author, char *keyword, ch
     add_employ();
 }
 
-//todo:blog相关
+
 void Book_system::import(int Quantity, int TotalCost_integer, int TotalCost_float) {
     if (accountSystem1->log_on_now.Privilege<3){
         IV();
@@ -385,4 +331,18 @@ Book Book_system::get(int position) {
     Book book;
     books.read(reinterpret_cast<char *>(&book), sizeof(Book));
     return book;
+}
+
+std::set<Book, cmp> Book_system::get_all_sorted() {
+    books.flush();
+    std::set<Book,cmp> tmp;
+    books.seekg(std::ios::beg);
+    while (!books.eof()){
+        Book book;
+        books.read(reinterpret_cast<char*>(&book), sizeof(Book));
+        tmp.insert(book);
+    }
+    books.close();
+    books.open("books",std::ios::in|std::ios::out|std::ios::binary);
+    return tmp;
 }
