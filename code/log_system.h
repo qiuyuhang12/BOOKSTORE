@@ -34,4 +34,5 @@ private:
     Account back();
     void clear_selected();
 };
+bool check(const char *in);
 #endif //BOOKSTORE_2023_LOG_SYSTEM_H

@@ -24,7 +24,7 @@ void Account_system::init(Blog_system &blogSystem_) {
 //void IV() {
 //    std::cout << "Invalid\n";
 //}
-bool check_num_letter___(const char *in){
+bool check_num_letter_(const char *in){
     int i=0;
     while (in[i]!=0){
         char o=in[i];
@@ -86,7 +86,7 @@ void Account_system::passwd(char *UserID, char *NewPassword, char *CurrentPasswo
         IV();
         return;
     }
-    if (check_num_letter___(NewPassword)){
+    if (check_num_letter_(NewPassword)){
         IV();
         return;
     }
@@ -131,7 +131,7 @@ void Account_system::useradd(char *UserID, char *Password, int Privilege, char *
         IV();
         return;
     }
-    if (check_num_letter___(UserID) || check_num_letter___(Password)) {
+    if (check_num_letter_(UserID) || check_num_letter_(Password)) {
         IV();
         return;
     }
@@ -160,7 +160,7 @@ void Account_system::useradd(char *UserID, char *Password, int Privilege, char *
 }
 
 void Account_system::register_(char *UserID, char *Password, char *Username) {
-    if (check_num_letter___(UserID) || check_num_letter___(Password)) {
+    if (check_num_letter_(UserID) || check_num_letter_(Password)) {
         IV();
         return;
     }

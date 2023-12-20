@@ -74,7 +74,7 @@ bool show_form_iv(std::string &in, index_type type) {
     return rsl;
 }
 
-std::string get_information(std::string &in, index_type type) {
+std::string get_information(std::string &in, index_type type) {//todo测试
     std::string tmp;
     switch (type) {
         case ISBN:
@@ -117,8 +117,16 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         strcpy(userid, string1.c_str());
         if (!string2.empty()) {
             strcpy(psw, string2.c_str());
+            if (check_num_letter_(psw)|| check_num_letter_(userid)|| strlen(psw)>30|| strlen(userid)>30){
+                IV();
+                return;
+            }
             mainSystem.su(userid, psw);
         } else {
+            if (check_num_letter_(userid)|| strlen(userid)>30){
+                IV();
+                return;
+            }
             mainSystem.su(userid);
         }
     } else if (order == "logout") {
@@ -137,6 +145,10 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         strcpy(userid, string1.c_str());
         strcpy(psw, string2.c_str());
         strcpy(username, string3.c_str());
+        if (check_num_letter_(psw)|| check_num_letter_(userid)|| strlen(userid)>30|| strlen(psw)>30|| strlen(username)>30){
+            IV();
+            return;
+        }
         mainSystem.register_(userid, psw, username);
     } else if (order == "passwd") {
         char userid[31] = {0}, cpsw[31] = {0}, npsw[31] = {0};
@@ -148,10 +160,18 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         strcpy(userid, string1.c_str());
         if (string3.empty()) {
             strcpy(npsw, string2.c_str());
+            if (check_num_letter_(npsw)|| check_num_letter_(userid)|| strlen(userid)>30|| strlen(npsw)>30){
+                IV();
+                return;
+            }
             mainSystem.passwd(userid, npsw);
         } else {
             strcpy(cpsw, string2.c_str());
             strcpy(npsw, string3.c_str());
+            if (check_num_letter_(npsw)||check_num_letter_(cpsw)|| check_num_letter_(userid)|| strlen(userid)>30|| strlen(npsw)>30|| strlen(cpsw)>30){
+                IV();
+                return;
+            }
             mainSystem.passwd(userid, npsw, cpsw);
         }
     } else if (order == "useradd") {
@@ -167,6 +187,10 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         strcpy(psw, string2.c_str());
         pri = string3[0] - '0';
         strcpy(username, string4.c_str());
+        if (check_num_letter_(psw)|| check_num_letter_(userid)||(pri!=0&&pri!=1&&pri!=3&&pri!=7)|| strlen(userid)>30|| strlen(username)>30|| strlen(psw)>30){
+            IV();
+            return;
+        }
         mainSystem.useradd(userid, psw, pri, username);
     } else if (order == "delete") {
         char userid[31] = {0};
@@ -175,7 +199,12 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
             return;
         }
         strcpy(userid, string1.c_str());
+        if (check_num_letter_(userid)|| strlen(userid)>30){
+            IV();
+            return;
+        }
         mainSystem.delete_(userid);
+
     } else if (order == "show") {
         if (string1 == "finance") {
             if (mainSystem.accountSystem.log_on_now.Privilege<7){
@@ -191,6 +220,10 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
             } else {
                 int count = 0;
                 for (char i: string2) {
+                    if (i<'0'||i>'9'){
+                        IV();
+                        return;
+                    }
                     count *= 10;
                     count += i - '0';
                 }
@@ -213,6 +246,10 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
                     return;
                 }
                 strcpy(inf, get_information(string1, ISBN).c_str());
+                if (strlen(inf)>20){
+                    IV();
+                    return;
+                }
                 mainSystem.show(inf, ISBN);
             } else if (tmp == 'n') {
                 if (show_form_iv(string1, name)) {
@@ -220,6 +257,14 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
                     return;
                 }
                 strcpy(inf, get_information(string1, name).c_str());
+                if (check_no_quote(inf)){
+                    IV();
+                    return;
+                }
+                if (strlen(inf)>60){
+                    IV();
+                    return;
+                }
                 mainSystem.show(inf, name);
             } else if (tmp == 'a') {
                 if (show_form_iv(string1, author)) {
@@ -227,6 +272,14 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
                     return;
                 }
                 strcpy(inf, get_information(string1, author).c_str());
+                if (check_no_quote(inf)){
+                    IV();
+                    return;
+                }
+                if (strlen(inf)>60){
+                    IV();
+                    return;
+                }
                 mainSystem.show(inf, author);
             } else if (tmp == 'k') {
                 if (show_form_iv(string1, keyword)) {
@@ -234,6 +287,15 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
                     return;
                 }
                 strcpy(inf, get_information(string1, keyword).c_str());
+                if (check_no_quote(inf)){
+//                    check_repeat()
+                    IV();
+                    return;
+                }
+                if (strlen(inf)>60){
+                    IV();
+                    return;
+                }
                 mainSystem.show(inf, keyword);
             } else {
                 IV();
@@ -250,8 +312,16 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         }
         strcpy(isbn, string1.c_str());
         for (char i: string2) {
+            if (i<'0'||i>'9'){
+                IV();
+                return;
+            }
             q *= 10;
             q += i - '0';
+        }
+        if (strlen(isbn)>20){
+            IV();
+            return;
         }
         mainSystem.buy(isbn, q);
     } else if (order == "select") {
@@ -261,8 +331,13 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
             return;
         }
         strcpy(isbn, string1.c_str());
+        if (strlen(isbn)>20){
+            IV();
+            return;
+        }
         mainSystem.select(isbn);
     } else if (order == "modify") {
+        //todo查重，查格式
         if (!string6.empty()) {
             IV();
             return;
@@ -275,20 +350,46 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
                 break;
             }
             unempty++;
+            int checkRepeat[5]={0};
             switch ((*str)[1]) {
                 case 'I':
+                    if (checkRepeat[0]!=0){
+                        IV();
+                        return;
+                    }
+                    checkRepeat[0]++;
                     indexes.push_back(ISBN);
                     break;
                 case 'n':
+                    if (checkRepeat[1]!=0){
+                        IV();
+                        return;
+                    }
+                    checkRepeat[1]++;
                     indexes.push_back(name);
                     break;
                 case 'a':
+                    if (checkRepeat[2]!=0){
+                        IV();
+                        return;
+                    }
+                    checkRepeat[2]++;
                     indexes.push_back(author);
                     break;
                 case 'k':
+                    if (checkRepeat[3]!=0){
+                        IV();
+                        return;
+                    }
+                    checkRepeat[3]++;
                     indexes.push_back(keyword);
                     break;
                 case 'p':
+                    if (checkRepeat[4]!=0){
+                        IV();
+                        return;
+                    }
+                    checkRepeat[4]++;
                     indexes.push_back(price);
                     break;
                 default:
@@ -311,11 +412,16 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
                 trans[i] = information[i];
             }
         }
+        //null,isbn,name,author,keyword,price;
         mainSystem.modify(trans[1], trans[2], trans[3], trans[4], trans[5]);
     } else if (order == "import") {
         int q = 0, ti = 0, tf = 0;
         if (string1.empty() || string2.empty() || string1.size() > 10 || string2.size() > 13
             || !string3.empty()) {
+            IV();
+            return;
+        }
+        if (string1.size()>10){
             IV();
             return;
         }
@@ -327,6 +433,10 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
             q *= 10;
             q += i - '0';
         }
+        if (string2.size()>13){
+            IV();
+            return;
+        }
         for (int i = 0; i < string2.size(); ++i) {
             if (string2[i] == '.') {
                 if (string2[i + 1] > '9' || string2[i + 1] < '0' || string2[i + 2] > '9' || string2[i + 2] < '0' ||
@@ -335,6 +445,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
                     return;
                 }
                 tf = (string2[i + 1] - '0') * 10 + string2[i + 2] - '0';
+                break;//todo:会不会少报invalid
             }
             if (string2[i] > '9' || string2[i] < '0') {
                 IV();

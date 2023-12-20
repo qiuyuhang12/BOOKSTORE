@@ -163,6 +163,7 @@ Price to_price(char *price) {
                 throw a;
             }
             tf = (string2[i + 1] - '0') * 10 + string2[i + 2] - '0';
+            break;
         }
         if (string2[i] > '9' || string2[i] < '0') {
             IV();
@@ -223,6 +224,10 @@ void Book_system::modify(char *ISBN, char *name, char *author, char *keyword, ch
     }
     Book old = selected;//todo测试这是否合法
     if (price != nullptr) {
+        if (strlen(price)>13){
+            IV();
+            return;
+        }
         try {
             selected.price = to_price(price);
         } catch (int) {
@@ -251,16 +256,28 @@ void Book_system::modify(char *ISBN, char *name, char *author, char *keyword, ch
         add_key(keys, select_position);
     }
     if (ISBN != nullptr) {
+        if (strlen(ISBN)>20){
+            IV();
+            return;
+        }
         strcpy(selected.ISBN, ISBN);
         fISBN.delete_(old.ISBN, select_position);
         fISBN.insert(ISBN, select_position);
     }
     if (name != nullptr) {
+        if (strlen(name)>60){
+            IV();
+            return;
+        }
         strcpy(selected.BookName, name);
         fBookName.delete_(old.BookName, select_position);
         fBookName.insert(name, select_position);
     }
     if (author != nullptr) {
+        if (strlen(author)>60){
+            IV();
+            return;
+        }
         strcpy(selected.Author, author);
         fAuthor.delete_(old.Author, select_position);
         fAuthor.insert(author, select_position);
@@ -311,14 +328,17 @@ void Book_system::add_key(std::vector<std::string> &keys, int position) {
 }
 
 void Book_system::show_all() {
-    std::vector<unsigned long long > pos_in_kvd=fISBN.get_th_to_posi_map();//1->1st的位置序;
-    for (unsigned long long i:pos_in_kvd) {
-        std::vector<int> pos_in_books=fISBN.get_whole_block(i);
-        for (int j:pos_in_books) {
-            Book book= get(j);
-            std::cout<<book;
-        }
+    for (auto item:get_all_sorted()) {
+        std::cout<<item;
     }
+//    std::vector<unsigned long long > pos_in_kvd=fISBN.get_th_to_posi_map();//1->1st的位置序;
+//    for (unsigned long long i:pos_in_kvd) {
+//        std::vector<int> pos_in_books=fISBN.get_whole_block(i);
+//        for (int j:pos_in_books) {
+//            Book book= get(j);
+//            std::cout<<book;
+//        }
+//    }
 }
 
 void Book_system::change(int position, Book &new_) {

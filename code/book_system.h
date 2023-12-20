@@ -90,5 +90,6 @@ private:
     void show_all();
     std::set<Book,cmp>get_all_sorted();
 };
-
+bool check_no_quote(const char *in);
+bool check_repeat(std::vector<std::string> &in) ;//有重为true
 #endif //BOOKSTORE_2023_BOOK_SYSTEM_H

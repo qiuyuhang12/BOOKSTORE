@@ -52,5 +52,5 @@ private:
     Account get(int position);//得到accounts中此处
     void change(int position,Account& new_);//修改accounts中此处
 };
-
+bool check_num_letter_(const char *in);
 #endif //BOOKSTORE_2023_ACCOUNT_SYSTEM_H
