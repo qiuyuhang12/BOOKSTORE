@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 include_directories(.)
 
-add_executable(Bookstore_2023
+add_executable(code
         key_value_database.cpp
         key_value_database.h
         main.cpp
