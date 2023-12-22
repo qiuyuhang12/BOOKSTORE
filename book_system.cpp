@@ -123,7 +123,7 @@ void Book_system::show(char *index, index_type type) {
 //    add_log(Price(0),Price(0));
 }
 
-void Book_system::buy(char *ISBN, int Quantity) {
+void Book_system::buy(char *ISBN, long long Quantity) {
     if (accountSystem1->log_on_now.Privilege < 1) {
         IV();
         return;
@@ -361,7 +361,7 @@ void Book_system::modify(char *ISBN, char *name, char *author, char *keyword, ch
 }
 
 
-void Book_system::import(int Quantity, int TotalCost_integer, int TotalCost_float) {
+void Book_system::import(long long Quantity, long long TotalCost_integer, long long TotalCost_float) {
     if (accountSystem1->log_on_now.Privilege < 3) {
         IV();
         return;

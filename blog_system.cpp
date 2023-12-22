@@ -38,7 +38,7 @@ Price operator-(Price &lhs, Price &rhs) {
     return tmp;
 }
 
-Price operator*(int &lhs, Price &rhs) {
+Price operator*(long long &lhs, Price &rhs) {
     Price tmp;
     tmp.integer = lhs * rhs.integer;
     tmp.float_ = lhs * rhs.float_;

@@ -23,8 +23,8 @@ struct Price {
 //    Price(int a){
 //        integer=a;
 //    }
-    int integer = 0;
-    int float_ = 0;
+    long long integer = 0;
+    long long float_ = 0;
 
     Price &operator+=(Price &rhs);
 
@@ -36,7 +36,7 @@ struct Price {
 
     friend Price operator-(Price &lhs, Price &rhs);
 
-    friend Price operator*(int &lhs, Price &rhs);
+    friend Price operator*(long long &lhs, Price &rhs);
 };
 struct Book {
     char ISBN[21] = {0};

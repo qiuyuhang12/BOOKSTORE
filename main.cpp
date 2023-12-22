@@ -16,22 +16,22 @@ std::string get_information(std::string &in, index_type type);
 //输出Invalid
 //void IV();
 void clear_file() {
-    remove("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/code/cmake-build-debug/accounts");
-    remove("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/code/cmake-build-debug/books");
-    remove("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/code/cmake-build-debug/count_file");
-    remove("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/code/cmake-build-debug/fAuthorcatalog");
-    remove("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/code/cmake-build-debug/fAuthordictionary");
-    remove("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/code/cmake-build-debug/fBookNamecatalog");
-    remove("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/code/cmake-build-debug/fBookNamedictionary");
-    remove("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/code/cmake-build-debug/fISBNcatalog");
-    remove("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/code/cmake-build-debug/fISBNdictionary");
-    remove("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/code/cmake-build-debug/fKeyWordcatalog");
-    remove("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/code/cmake-build-debug/fKeyWorddictionary");
-    remove("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/code/cmake-build-debug/log_file");
-    remove("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/code/cmake-build-debug/report_employee_file");
-    remove("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/code/cmake-build-debug/report_finance_file");
-    remove("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/code/cmake-build-debug/UserID_index_filecatalog");
-    remove("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/code/cmake-build-debug/UserID_index_filedictionary");
+    remove("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/cmake-build-debug/accounts");
+    remove("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/cmake-build-debug/books");
+    remove("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/cmake-build-debug/count_file");
+    remove("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/cmake-build-debug/fAuthorcatalog");
+    remove("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/cmake-build-debug/fAuthordictionary");
+    remove("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/cmake-build-debug/fBookNamecatalog");
+    remove("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/cmake-build-debug/fBookNamedictionary");
+    remove("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/cmake-build-debug/fISBNcatalog");
+    remove("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/cmake-build-debug/fISBNdictionary");
+    remove("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/cmake-build-debug/fKeyWordcatalog");
+    remove("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/cmake-build-debug/fKeyWorddictionary");
+    remove("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/cmake-build-debug/log_file");
+    remove("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/cmake-build-debug/report_employee_file");
+    remove("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/cmake-build-debug/report_finance_file");
+    remove("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/cmake-build-debug/UserID_index_filecatalog");
+    remove("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/cmake-build-debug/UserID_index_filedictionary");
     remove("2int");
 }
 

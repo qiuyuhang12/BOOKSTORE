@@ -50,13 +50,13 @@ public:
 
     void show(char *index, index_type);
 
-    void buy(char *ISBN, int Quantity);
+    void buy(char *ISBN, long long Quantity);
 
     void select(char *ISBN);
 
     void modify(char *ISBN, char *name, char *author, char *keyword, char *price);
 
-    void import(int Quantity, int TotalCost_integer, int TotalCost_float);
+    void import(long long Quantity, long long TotalCost_integer, long long TotalCost_float);
 
     bool already_select = false;
     int end_of_book = 0;//todo内存转外存
