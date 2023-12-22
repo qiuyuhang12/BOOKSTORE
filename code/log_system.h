@@ -26,6 +26,9 @@ private:
     Account_system *accountSystem= nullptr;
     Book_system *bookSystem= nullptr;
     std::vector<Account> loger_stack;
+    std::vector<Book> book_selected_stack;
+    std::vector<bool> already_select_stack;
+    std::vector<int> select_position_stack;
 //    std::fstream log_file;
     int log_num=1;
     long long last_position=0;

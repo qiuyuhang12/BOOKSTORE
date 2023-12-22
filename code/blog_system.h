@@ -82,6 +82,12 @@ class Blog_system {
 public:
     //保证格式、权限合法，不保证输入（如特定user）存在
     Blog_system();
+    ~Blog_system(){
+        count_file.close();
+        report_finance_file.close();
+        report_employee_file.close();
+        log_file.close();
+    }
     void show_finance(int count = -1);
 
     void log();
@@ -96,6 +102,8 @@ public:
     void add_log(Do_table&doTable);
     std::string *do_str= nullptr;
 private:
+    Count get_last();
+    Count get_count(int count);
     std::fstream count_file;
     std::fstream report_finance_file;
     std::fstream report_employee_file;

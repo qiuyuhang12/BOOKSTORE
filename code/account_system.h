@@ -28,6 +28,9 @@ class Account_system {
 public:
     //保证格式、权限合法，不保证输入（如特定user）存在
     Account_system();
+    ~Account_system(){
+        file.close();
+    }
     void init(Blog_system&blogSystem);
     void register_(char *UserID, char *Password, char *Username);
 
@@ -41,6 +44,8 @@ public:
 
     Account get(char *UserID);
     std::unordered_map<char*,int> loger_num;
+    int last_position_of_account=0;//最后一个account的begin//todo内存转外存
+
 private:
     void useradd_hard(char *UserID, char *Password, int Privilege, char *Username);
     void add_log();
@@ -48,7 +53,6 @@ private:
     Blog_system*blogSystem= nullptr;
     std::fstream file;
     Key_value_database UserID_index_file;
-    int last_position_of_account=0;//最后一个account的begin
 //    void erase(int position);//删去accounts中此处
     Account get(int position);//得到accounts中此处
     void change(int position,Account& new_);//修改accounts中此处

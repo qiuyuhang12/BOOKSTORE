@@ -15,8 +15,8 @@ void Log_system::add_log() {
 //}
 
 void Log_system::clear_selected() {
-//    Book book;
-//    bookSystem->selected=book;
+    Book book;
+    bookSystem->selected=book;
     bookSystem->already_select = false;
 }
 
@@ -39,10 +39,30 @@ void Log_system::logout() {
     }
     accountSystem->log_on_now = back();
     clear_selected();
+//    bookSystem->selected=book_selected_stack.back();
+//    book_selected_stack.pop_back();
+    if (!already_select_stack.empty()) {
+        bookSystem->already_select = already_select_stack.back();
+        already_select_stack.pop_back();
+        bookSystem->select_position = select_position_stack.back();
+        select_position_stack.pop_back();
+//        bookSystem->books.seekg(bookSystem->select_position,std::ios::beg);
+        bookSystem->books.flush();
+        Book book=bookSystem->get(bookSystem->select_position);
+        if (bookSystem->books.tellg()==-1){
+            bookSystem->books.close();
+            bookSystem->books.open("books",std::ios::out|std::ios::in|std::ios::binary);
+        }
+//        bookSystem->books.read(reinterpret_cast<char *>(&book), sizeof(Book));
+        bookSystem->selected=book;
+    }
     add_log();
 }
 
 bool check(const char *in) {
+    if (in==nullptr){
+        return true;
+    }
     int i = 0;
     while (in[i] != 0) {
         char o = in[i];
@@ -62,20 +82,24 @@ void Log_system::su(char *UserID, char *Password) {
         IV();
         return;
     }
-    log_num++;
     Account account = accountSystem->get(UserID);
     if (Password == nullptr) {
         if (accountSystem->log_on_now.Privilege <= account.Privilege) {
+            IV();
             return;
         }
     } else if (strcmp(Password, account.Password) != 0) {
         IV();
         return;
     }
+    log_num++;
     accountSystem->log_on_now = account;
     push_back(account);
 //    accountSystem->stack_kvd.insert(account.UserID, 0);
     accountSystem->loger_num[accountSystem->log_on_now.UserID]++;
+//    book_selected_stack.push_back(bookSystem->selected);
+    already_select_stack.push_back(bookSystem->already_select);
+    select_position_stack.push_back(bookSystem->select_position);
     clear_selected();
     add_log();
 }
@@ -99,8 +123,8 @@ void Log_system::Log_system_init(Account_system &accountSystem_, Book_system &bo
     accountSystem = &accountSystem_;
     bookSystem = &bookSystem1_;
     blogSystem = &blogSystem_;
-    char UserID[31] = {0};
-    accountSystem->loger_num[UserID] = 1;
+//    char UserID[31] = {0};
+//    accountSystem->loger_num[UserID] = 1;
 }
 
 void Log_system::pop_back() {

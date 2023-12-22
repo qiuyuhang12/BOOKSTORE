@@ -3,49 +3,54 @@
 //
 #include "book_system.h"
 #include <algorithm>
-void Book_system::add_log(Price &in,Price &out){
+
+void Book_system::add_log(Price &in, Price &out) {
     Do_table doTable;
-    doTable.in=in;
-    doTable.out=out;
-    strcpy(doTable.UserID,accountSystem1->log_on_now.UserID);
-    strcpy(doTable.do_,blogSystem->do_str->c_str());
+    doTable.in = in;
+    doTable.out = out;
+    strcpy(doTable.UserID, accountSystem1->log_on_now.UserID);
+    strcpy(doTable.do_, blogSystem->do_str->c_str());
     blogSystem->add_log(doTable);
 }
-void Book_system::add_employ(){
-    if (accountSystem1->log_on_now.Privilege!=3){
+
+void Book_system::add_employ() {
+    if (accountSystem1->log_on_now.Privilege != 3) {
         return;
     }
     Employee_table employeeTable;
-    strcpy(employeeTable.UserID,accountSystem1->log_on_now.UserID);
-    strcpy(employeeTable.do_,blogSystem->do_str->c_str());
+    strcpy(employeeTable.UserID, accountSystem1->log_on_now.UserID);
+    strcpy(employeeTable.do_, blogSystem->do_str->c_str());
     blogSystem->add_employee(employeeTable);
 }
-void Book_system::add_finance(Price &in,Price &out,char *ISBN,char*UserID,int Quality){
+
+void Book_system::add_finance(Price &in, Price &out, char *ISBN, char *UserID, int Quality) {
     Finance_table financeTable;
-    financeTable.money_in=in;
-    financeTable.money_out=out;
-    strcpy(financeTable.do_,blogSystem->do_str->c_str());
-    strcpy(financeTable.UserID,UserID);
-    strcpy(financeTable.ISBN,ISBN);
-    financeTable.Quality=Quality;
+    financeTable.money_in = in;
+    financeTable.money_out = out;
+    strcpy(financeTable.do_, blogSystem->do_str->c_str());
+    strcpy(financeTable.UserID, UserID);
+    strcpy(financeTable.ISBN, ISBN);
+    financeTable.Quality = Quality;
     blogSystem->add_finance(financeTable);
 }
-void Book_system::add_count(Price &in,Price &out){
+
+void Book_system::add_count(Price &in, Price &out) {
     Count count;
-    count.money_in=in;
-    count.money_out=out;
+    count.money_in = in;
+    count.money_out = out;
     blogSystem->add_count(count);
 }
-void Book_system::init(Blog_system &blogSystem_,Account_system&accountSystem_) {
-    blogSystem=&blogSystem_;
-    accountSystem1=&accountSystem_;
+
+void Book_system::init(Blog_system &blogSystem_, Account_system &accountSystem_) {
+    blogSystem = &blogSystem_;
+    accountSystem1 = &accountSystem_;
 }
 //void IV() {
 //    std::cout << "Invalid\n";
 //}
 
 bool check_no_quote(const char *in) {
-    if (in==nullptr){
+    if (in == nullptr) {
         return false;
     }
     for (int i = 0; i < 60; ++i) {
@@ -55,7 +60,6 @@ bool check_no_quote(const char *in) {
     }
     return false;
 }
-
 
 
 Book_system::Book_system() : fAuthor("fAuthor"), fBookName("fBookName"), fISBN("fISBN"), fKeyWord("fKeyWord") {
@@ -73,9 +77,14 @@ Book_system::Book_system() : fAuthor("fAuthor"), fBookName("fBookName"), fISBN("
     fAuthor.initialize("fAuthor");
     fBookName.initialize("fBookName");
 }
-
+bool cmpp(const Book lhs,const Book rhs){
+    if (strcmp(lhs.ISBN,rhs.ISBN)<0) {
+        return true;
+    }
+    return false;
+}
 void Book_system::show(char *index, index_type type) {
-    if (accountSystem1->log_on_now.Privilege<1){
+    if (accountSystem1->log_on_now.Privilege < 1) {
         IV();
         return;
     }
@@ -98,17 +107,24 @@ void Book_system::show(char *index, index_type type) {
             all = fKeyWord.find_no_output(index);
             break;
     }
+    std::set<Book,cmp> bs;
     for (int pos: all) {
         Book book = get(pos);
+        bs.insert(book);
+    }
+    for (auto book:bs) {
         std::cout << book;
     }
-    Price price1,price2;
-    add_log(price1,price2);
+    if (all.empty()) {
+        std::cout << '\n';
+    }
+    Price price1, price2;
+    add_log(price1, price2);
 //    add_log(Price(0),Price(0));
 }
 
 void Book_system::buy(char *ISBN, int Quantity) {
-    if (accountSystem1->log_on_now.Privilege<1){
+    if (accountSystem1->log_on_now.Privilege < 1) {
         IV();
         return;
     }
@@ -124,18 +140,19 @@ void Book_system::buy(char *ISBN, int Quantity) {
         return;
     }
     change(all.front(), tmp);
-    Price price_in,price_out;
-    price_in=Quantity*tmp.price;
-    add_log(price_in,price_out);
-    add_count(price_in,price_out);
-    add_finance(price_in,price_out,ISBN,accountSystem1->log_on_now.UserID,Quantity);
+    Price price_in, price_out;
+    price_in = Quantity * tmp.price;
+    std::cout << price_in << '\n';
+    add_log(price_in, price_out);
+    add_count(price_in, price_out);
+    add_finance(price_in, price_out, ISBN, accountSystem1->log_on_now.UserID, Quantity);
 }
 
 //already done:新旧都需改索引文件
 
 //todo:xiu
 void Book_system::select(char *ISBN) {
-    if (accountSystem1->log_on_now.Privilege<3){
+    if (accountSystem1->log_on_now.Privilege < 3) {
         IV();
         return;
     }
@@ -153,8 +170,8 @@ void Book_system::select(char *ISBN) {
     }
     already_select = true;
     selected = tmp;
-    Price price_in,price_out;
-    add_log(price_in,price_out);
+    Price price_in, price_out;
+    add_log(price_in, price_out);
 }
 
 Price to_price(char *price) {
@@ -163,23 +180,38 @@ Price to_price(char *price) {
     int ti = 0, tf = 0;
     for (int i = 0; i < string2.size(); ++i) {
         if (string2[i] == '.') {
-            if (string2[i + 1] > '9' || string2[i + 1] < '0' || string2[i + 2] > '9' || string2[i + 2] < '0' ||
-                string2[i + 3] != 0) {
+            if (string2.size() >= i + 4 || string2.size() == i + 1) {//不是.不是.xxx
                 IV();
                 int a;
                 throw a;
             }
-            tf = (string2[i + 1] - '0') * 10 + string2[i + 2] - '0';
+            if (string2.size() == i + 2) {//是.x
+                if (string2[i + 1] > '9' || string2[i + 1] < '0') {
+                    IV();
+                    int a;
+                    throw a;
+                }
+                tf = (string2[i + 1] - '0') * 10;
+                break;
+            }
+            if (string2.size() == i + 3) {//是.xx
+                if (string2[i + 1] > '9' || string2[i + 1] < '0' || string2[i + 2] > '9' || string2[i + 2] < '0' ||
+                    string2[i + 3] != 0) {
+                    IV();
+                    int a;
+                    throw a;
+                }
+                tf = (string2[i + 1] - '0') * 10 + string2[i + 2] - '0';
+            }
             break;
         }
         if (string2[i] > '9' || string2[i] < '0') {
             IV();
             int a;
             throw a;
-            return tmp;
         }
         ti *= 10;
-        ti += string2[i]-'0';
+        ti += string2[i] - '0';
     }
     tmp.integer = ti;
     tmp.float_ = tf;
@@ -194,16 +226,18 @@ std::vector<std::string> piece_keyword(char *keyword) {
         char now = keyword[position];
         if (now == '|') {
             all.push_back(tmp);
+            tmp="";
         } else {
             tmp += now;
         }
         position++;
     }
+    all.push_back(tmp);
     return all;
 }
 
 bool check_repeat(std::vector<std::string> &in) {//有重为true
-    if (in.empty()){
+    if (in.empty()) {
         return false;
     }
     std::sort(in.begin(), in.end());
@@ -216,7 +250,7 @@ bool check_repeat(std::vector<std::string> &in) {//有重为true
 }
 
 void Book_system::modify(char *ISBN, char *name, char *author, char *keyword, char *price) {
-    if (accountSystem1->log_on_now.Privilege<3){
+    if (accountSystem1->log_on_now.Privilege < 3) {
         IV();
         return;
     }
@@ -228,30 +262,66 @@ void Book_system::modify(char *ISBN, char *name, char *author, char *keyword, ch
         IV();
         return;
     }
-    if (ISBN!= nullptr) {
+    if (ISBN != nullptr) {
         if (strcmp(ISBN, selected.ISBN) == 0) {
             IV();
             return;
         }
     }
+
     Book old = selected;//todo测试这是否合法
-    if (price != nullptr) {
-        if (strlen(price)>13){
+    if (keyword != nullptr) {
+        std::vector<std::string> keys = piece_keyword(keyword);
+        if (check_repeat(keys)) {
             IV();
+            selected = old;
+            return;
+        }
+    }
+    if (ISBN != nullptr) {
+        if (strlen(ISBN) > 20) {
+            IV();
+            selected = old;
+            return;
+        }
+        if (!fISBN.find_no_output(ISBN).empty()) {
+            IV();
+            selected = old;
+            return;
+        }
+    }
+    if (name != nullptr) {
+        if (strlen(name) > 60) {
+            IV();
+            selected = old;
+            return;
+        }
+    }
+    if (author != nullptr) {
+        if (strlen(author) > 60) {
+            IV();
+            selected = old;
+            return;
+        }
+    }
+
+
+
+    if (price != nullptr) {
+        if (strlen(price) > 13) {
+            IV();
+            selected = old;
             return;
         }
         try {
             selected.price = to_price(price);
         } catch (int) {
+            selected = old;
             return;
         }
     }
     if (keyword != nullptr) {
         std::vector<std::string> keys = piece_keyword(keyword);
-        if (check_repeat(keys)) {
-            IV();
-            return;
-        }
         strcpy(selected.Keyword, keyword);
         for (int &i: selected.cut_position) {
             i = 0;
@@ -268,41 +338,31 @@ void Book_system::modify(char *ISBN, char *name, char *author, char *keyword, ch
         add_key(keys, select_position);
     }
     if (ISBN != nullptr) {
-        if (strlen(ISBN)>20){
-            IV();
-            return;
-        }
         strcpy(selected.ISBN, ISBN);
         fISBN.delete_(old.ISBN, select_position);
         fISBN.insert(ISBN, select_position);
     }
     if (name != nullptr) {
-        if (strlen(name)>60){
-            IV();
-            return;
-        }
         strcpy(selected.BookName, name);
         fBookName.delete_(old.BookName, select_position);
         fBookName.insert(name, select_position);
     }
     if (author != nullptr) {
-        if (strlen(author)>60){
-            IV();
-            return;
-        }
         strcpy(selected.Author, author);
-        fAuthor.delete_(old.Author, select_position);
+        if (strcmp(old.Author,"")!=0){
+            fAuthor.delete_(old.Author, select_position);
+        }
         fAuthor.insert(author, select_position);
     }
     change(select_position, selected);
-    Price price_in,price_out;
-    add_log(price_in,price_out);
+    Price price_in, price_out;
+    add_log(price_in, price_out);
     add_employ();
 }
 
 
 void Book_system::import(int Quantity, int TotalCost_integer, int TotalCost_float) {
-    if (accountSystem1->log_on_now.Privilege<3){
+    if (accountSystem1->log_on_now.Privilege < 3) {
         IV();
         return;
     }
@@ -312,12 +372,12 @@ void Book_system::import(int Quantity, int TotalCost_integer, int TotalCost_floa
     }
     selected.storage += Quantity;
     change(select_position, selected);
-    Price price_in,price_out;
-    price_out.integer=TotalCost_integer;
-    price_out.float_=TotalCost_float;
-    add_log(price_in,price_out);
-    add_count(price_in,price_out);
-    add_finance(price_in,price_out,selected.ISBN,accountSystem1->log_on_now.UserID,Quantity);
+    Price price_in, price_out;
+    price_out.integer = TotalCost_integer;
+    price_out.float_ = TotalCost_float;
+    add_log(price_in, price_out);
+    add_count(price_in, price_out);
+    add_finance(price_in, price_out, selected.ISBN, accountSystem1->log_on_now.UserID, Quantity);
     add_employ();
 }
 
@@ -340,8 +400,8 @@ void Book_system::add_key(std::vector<std::string> &keys, int position) {
 }
 
 void Book_system::show_all() {
-    for (auto item:get_all_sorted()) {
-        std::cout<<item;
+    for (auto item: get_all_sorted()) {
+        std::cout << item;
     }
 //    std::vector<unsigned long long > pos_in_kvd=fISBN.get_th_to_posi_map();//1->1st的位置序;
 //    for (unsigned long long i:pos_in_kvd) {
@@ -354,12 +414,12 @@ void Book_system::show_all() {
 }
 
 void Book_system::change(int position, Book &new_) {
-    books.seekp(position);
+    books.seekp(position, std::ios::beg);
     books.write(reinterpret_cast<char *>(&new_), sizeof(Book));
 }
 
 Book Book_system::get(int position) {
-    books.seekg(position);
+    books.seekg(position, std::ios::beg);
     Book book;
     books.read(reinterpret_cast<char *>(&book), sizeof(Book));
     return book;
@@ -367,18 +427,19 @@ Book Book_system::get(int position) {
 
 std::set<Book, cmp> Book_system::get_all_sorted() {
     books.flush();
-    std::set<Book,cmp> tmp;
-    books.seekg(0,std::ios::beg);
+//    std::cout<<books.tellg();
+    std::set<Book, cmp> tmp;
+    books.seekg(0, std::ios::beg);
     Book in;
-    while (!books.eof()){
-        Book book=in;
-        books.read(reinterpret_cast<char*>(&in), sizeof(Book));
-        if (strcmp(book.ISBN,in.ISBN)==0){
+    while (!books.eof()) {
+        Book book = in;
+        books.read(reinterpret_cast<char *>(&in), sizeof(Book));
+        if (strcmp(book.ISBN, in.ISBN) == 0) {
             break;
         }
         tmp.insert(in);
     }
     books.close();
-    books.open("books",std::ios::in|std::ios::out|std::ios::binary);
+    books.open("books", std::ios::in | std::ios::out | std::ios::binary);
     return tmp;
 }

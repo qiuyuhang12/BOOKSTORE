@@ -38,11 +38,14 @@ struct cmp{
         return false;
     }
 };
+
 class Book_system {
 public:
     //保证格式、权限合法，不保证输入（如特定书籍）存在
     Book_system();
-
+    ~Book_system(){
+        books.close();
+    }
     void init(Blog_system &blogSystem, Account_system &accountSystem);
 
     void show(char *index, index_type);
@@ -56,7 +59,12 @@ public:
     void import(int Quantity, int TotalCost_integer, int TotalCost_float);
 
     bool already_select = false;
+    int end_of_book = 0;//todo内存转外存
 
+    Book selected;
+    int select_position = 0;
+    std::fstream books;
+    Book get(int position);
 
 private:
     void add_log(Price &in, Price &out);
@@ -69,15 +77,10 @@ private:
 
     Blog_system *blogSystem = nullptr;
     Account_system *accountSystem1 = nullptr;
-    Book selected;
-    int select_position = 0;
-    int end_of_book = 0;
 
     void change(int position, Book &new_);
 
-    Book get(int position);
 
-    std::fstream books;
     Key_value_database fISBN;
     Key_value_database fBookName;
     Key_value_database fAuthor;
