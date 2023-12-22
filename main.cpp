@@ -6,7 +6,7 @@
 #include <string>
 #include <cstring>
 #include <cstdlib>
-
+//
 void order_analyse(std::string &line, Main_system &);
 
 bool show_form_iv(std::string &in, index_type type);
