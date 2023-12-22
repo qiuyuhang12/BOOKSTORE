@@ -9,7 +9,7 @@
 #include "fstream"
 #include <iostream>
 #include <blog_system.h>
-//#include <map>
+#include <map>
 #include <unordered_map>
 class Log_system;
 //struct Log_stack;

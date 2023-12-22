@@ -11,6 +11,7 @@
 #include <fstream>
 #include <key_value_database.h>
 #include <unordered_map>
+#include <map>
 class Account_system;
 class Blog_system;
 struct Account {
@@ -43,7 +44,8 @@ public:
     Account log_on_now;
 
     Account get(char *UserID);
-    std::unordered_map<char*,int> loger_num;
+    std::map<std::string ,int> loger_num;
+//    std::unordered_map<char*,int> loger_num;
     int last_position_of_account=0;//最后一个account的begin//todo内存转外存
 
 private:

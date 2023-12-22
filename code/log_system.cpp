@@ -3,6 +3,7 @@
 //
 #include "log_system.h"
 #include <cstring>
+#include <assert.h>
 
 void Log_system::add_log() {
     Do_table doTable;
@@ -16,7 +17,7 @@ void Log_system::add_log() {
 
 void Log_system::clear_selected() {
     Book book;
-    bookSystem->selected=book;
+    bookSystem->selected = book;
     bookSystem->already_select = false;
 }
 
@@ -33,9 +34,14 @@ void Log_system::logout() {
     pop_back();
     last_position -= sizeof(Account);
 //    accountSystem->stack_kvd.delete_(accountSystem->log_on_now.UserID, 0);
-    accountSystem->loger_num[accountSystem->log_on_now.UserID]--;
-    if (accountSystem->loger_num[accountSystem->log_on_now.UserID] == 0) {
-        accountSystem->loger_num.erase(accountSystem->log_on_now.UserID);
+    std::string s1 = accountSystem->log_on_now.UserID;
+    int num = accountSystem->loger_num[s1];
+    assert(num >= 0);
+//    accountSystem->loger_num[accountSystem->log_on_now.UserID]--;
+    if (num == 0 || num == 1) {
+        accountSystem->loger_num.erase(s1);
+    } else {
+        accountSystem->loger_num[s1]--;
     }
     accountSystem->log_on_now = back();
     clear_selected();
@@ -48,20 +54,20 @@ void Log_system::logout() {
         select_position_stack.pop_back();
 //        bookSystem->books.seekg(bookSystem->select_position,std::ios::beg);
         bookSystem->books.flush();
-        Book book=bookSystem->get(bookSystem->select_position);
-        if (bookSystem->books.tellg()==-1){
+        Book book = bookSystem->get(bookSystem->select_position);
+        if (bookSystem->books.tellg() == -1) {
             bookSystem->books.close();
-            bookSystem->books.open("books",std::ios::out|std::ios::in|std::ios::binary);
+            bookSystem->books.open("books", std::ios::out | std::ios::in | std::ios::binary);
         }
 //        bookSystem->books.read(reinterpret_cast<char *>(&book), sizeof(Book));
-        bookSystem->selected=book;
+        bookSystem->selected = book;
     }
     add_log();
 }
 
 bool check(const char *in) {
-    if (in==nullptr){
-        return true;
+    if (in == nullptr) {
+        return false;
     }
     int i = 0;
     while (in[i] != 0) {
@@ -96,7 +102,8 @@ void Log_system::su(char *UserID, char *Password) {
     accountSystem->log_on_now = account;
     push_back(account);
 //    accountSystem->stack_kvd.insert(account.UserID, 0);
-    accountSystem->loger_num[accountSystem->log_on_now.UserID]++;
+    std::string string2 = accountSystem->log_on_now.UserID;
+    accountSystem->loger_num[string2]++;
 //    book_selected_stack.push_back(bookSystem->selected);
     already_select_stack.push_back(bookSystem->already_select);
     select_position_stack.push_back(bookSystem->select_position);

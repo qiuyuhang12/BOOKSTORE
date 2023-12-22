@@ -65,11 +65,12 @@ void Account_system::delete_(char *UserID) {
         IV();
         return;
     }
-    if (loger_num[UserID] != 0) {
+    std::string s=UserID;
+    if (loger_num[s] != 0) {
         IV();
         return;
     } else {
-        loger_num.erase(UserID);
+        loger_num.erase(s);
     }
 
 //    if (!stack_kvd.find_no_output(UserID).empty()){
