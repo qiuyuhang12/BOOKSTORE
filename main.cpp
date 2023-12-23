@@ -6,6 +6,8 @@
 #include <string>
 #include <cstring>
 #include <cstdlib>
+#include <assert.h>
+
 //
 void order_analyse(std::string &line, Main_system &);
 
@@ -122,46 +124,46 @@ std::string get_information(std::string &in, index_type type) {//todo测试
     std::string tmp;
     switch (type) {
         case ISBN:
-            if (in.size()<=6){
+            if (in.size() <= 6) {
                 throw Err();
             }
-            if (in[0+5]==0){
+            if (in[0 + 5] == 0) {
                 throw Err();
             }
             tmp.insert(0, in, 6, in.size() - 6);
             break;
         case name:
-            if (in.size()<=8){
+            if (in.size() <= 8) {
                 throw Err();
             }
-            if (in[0+6]=='\"'&&in[1+6]=='\"'&&in.size()==8){
+            if (in[0 + 6] == '\"' && in[1 + 6] == '\"' && in.size() == 8) {
                 throw Err();
             }
             tmp.insert(0, in, 7, in.size() - 8);
             break;
         case author:
-            if (in.size()<=10){
+            if (in.size() <= 10) {
                 throw Err();
             }
-            if (in[0+8]=='\"'&&in[1+8]=='\"'&&in.size()==10){
+            if (in[0 + 8] == '\"' && in[1 + 8] == '\"' && in.size() == 10) {
                 throw Err();
             }
             tmp.insert(0, in, 9, in.size() - 10);
             break;
         case keyword:
-            if (in.size()<=11){
+            if (in.size() <= 11) {
                 throw Err();
             }
-            if (in[0+10-1]=='\"'&&in[1+10-1]=='\"'&&in.size()==11){
+            if (in[0 + 10 - 1] == '\"' && in[1 + 10 - 1] == '\"' && in.size() == 11) {
                 throw Err();
             }
             tmp.insert(0, in, 10, in.size() - 11);
             break;
         case price:
-            if (in.size()<=7){
+            if (in.size() <= 7) {
                 throw Err();
             }
-            if (in[0+6]==0){
+            if (in[0 + 6] == 0) {
                 throw Err();
             }
             tmp.insert(0, in, 7, in.size() - 7);
@@ -169,6 +171,7 @@ std::string get_information(std::string &in, index_type type) {//todo测试
     }
     return tmp;
 }
+
 //bool check_quote_quote_blank
 void order_analyse(std::string &line, Main_system &mainSystem) {
     mainSystem.blogSystem.do_str = &line;
@@ -183,6 +186,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
 //        strcpy(userid,piece.get().c_str());
 //        char psw[31]={0};
 //        strcpy(psw,piece.get().c_str());
+        assert(0);
         char userid[31] = {0}, psw[31] = {0};
         if (string1.size() > 30 || string2.size() > 30 || string1.empty() || !string3.empty()) {
             IV();
@@ -263,7 +267,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         strcpy(psw, string2.c_str());
         pri = string3[0] - '0';
         strcpy(username, string4.c_str());
-        if (check_num_letter_(psw) || check_num_letter_(userid)){
+        if (check_num_letter_(psw) || check_num_letter_(userid)) {
             return;
         }
         if ((pri != 0 && pri != 1 && pri != 3 && pri != 7) ||
@@ -490,7 +494,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
                 return;
             }
             strcpy(information[tmp], get_information(*(strs[i]), tmp).c_str());
-            if (information[tmp]== nullptr){
+            if (information[tmp] == nullptr) {
                 IV();
                 return;
             }
