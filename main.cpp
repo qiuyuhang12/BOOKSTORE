@@ -394,7 +394,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
             }
         }
     } else if (order == "buy") {
-        assert(0);
+//        assert(0);
         char isbn[21] = {0};
         int q = 0;
         if (string1.empty() || string2.empty() || string1.size() > 20 || string2.size() > 10
@@ -421,6 +421,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         }
         mainSystem.buy(isbn, q);
     } else if (order == "select") {
+        assert(0);
         char isbn[21] = {0};
         if (string1.empty() || string1.size() > 30 || !string2.empty()) {
             IV();
