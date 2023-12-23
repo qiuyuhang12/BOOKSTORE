@@ -38,8 +38,6 @@ int main() {
 //    clear_file();
     Main_system mainSystem;
     std::string line;
-    Catalog catalog;
-    Dictionary dictionary;
     while (getline(std::cin, line)) {
         if (line.empty()) {
             continue;
@@ -159,7 +157,7 @@ std::string get_information(std::string &in, index_type type) {
             if (in.size() <= 7) {
                 throw Err();
             }
-            if (in[0 + 6] == 0) {
+            if (in[0 + 7] == '.') {
                 throw Err();
             }
             tmp.insert(0, in, 7, in.size() - 7);
@@ -553,6 +551,10 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
             IV();
             return;
         }
+        if (string2[0]=='.'){
+            IV();
+            return;
+        }
         for (int i = 0; i < string2.size(); ++i) {
             if (string2[i] == '.') {
                 if (string2.size() >= i + 4 || string2.size() == i + 1) {//不是.不是.xxx
@@ -613,3 +615,75 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
     } else IV();
 }
 
+//account_system.cpp blog_system.cpp book_system.cpp key_value_database.cpp log_system.cpp main.cpp main_system.cpp
+
+//su root sjtu
+//select a
+//import 10 100.9
+//show finance
+//import 20 874.32
+//show finance
+//show finance 1
+//show finance 2
+//show finance 3
+//check_num_letter_
+//check_no_quote(
+//check_split(
+//check_repeat(
+//check_kyw_length(
+//check(
+//check_invisible(//有throw
+//check_invisible_(
+//Check
+
+//throw
+
+//
+//su root sjtu
+//
+//
+//passwd root sjd
+//
+//passwd 23)4#$r
+//
+//useradd isjf_S ds 3 dfs
+
+
+//su root sjtu
+//passwd root sjd
+//passwd 23)4#$r
+//useradd isjf_S ds 3 dfsInvalid
+//passwd root 2132@#
+//su s)
+//su 2*_
+//useradd a a 3 4
+//su hfsi
+//su 2:
+//su a 2#
+//su a a_
+//delete @#
+//show finance
+//show finance 4
+//show finance 1
+//show finance 0
+//show finance -1
+//show finance 1 1
+//select a
+//import 34 34
+//import 2.3 2
+//import 1231 32123213
+//import 00000023
+//import 0000123 032.3
+//show
+//show finance
+//show finance
+//show finance
+//show finance
+//show finance 1
+//show finance 0
+//log
+//show
+//report finance
+//show finance
+
+//fstream
