@@ -281,7 +281,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         }
         mainSystem.useradd(userid, psw, pri, username);
     } else if (order == "delete") {
-        assert(0);
+//        assert(0);
         char userid[31] = {0};
         if (string1.empty() || string1.size() > 30 || !string2.empty()) {
             IV();
@@ -296,6 +296,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
 
     } else if (order == "show") {
         if (string1 == "finance") {
+            assert(0);
             if (mainSystem.accountSystem.log_on_now.Privilege < 7) {
                 IV();
                 return;
