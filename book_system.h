@@ -16,7 +16,7 @@
 enum index_type {
     none, ISBN, name, author, keyword, price
 };
-//struct book;
+
 class Book_system;
 
 class Blog_system;
@@ -29,10 +29,9 @@ struct Employee_table;
 struct Do_table;
 
 
-
-struct cmp{
-    bool operator ()(const Book&lhs,const Book&rhs)const{
-        if (strcmp(lhs.ISBN,rhs.ISBN)<0) {
+struct cmp {
+    bool operator()(const Book &lhs, const Book &rhs) const {
+        if (strcmp(lhs.ISBN, rhs.ISBN) < 0) {
             return true;
         }
         return false;
@@ -43,9 +42,11 @@ class Book_system {
 public:
     //保证格式、权限合法，不保证输入（如特定书籍）存在
     Book_system();
-    ~Book_system(){
+
+    ~Book_system() {
         books.close();
     }
+
     void init(Blog_system &blogSystem, Account_system &accountSystem);
 
     void show(char *index, index_type);
@@ -59,11 +60,12 @@ public:
     void import(long long Quantity, long long TotalCost_integer, long long TotalCost_float);
 
     bool already_select = false;
-    int end_of_book = 0;//todo内存转外存
+    int end_of_book = 0;
 
     Book selected;
     int select_position = 0;
     std::fstream books;
+
     Book get(int position);
 
 private:
@@ -91,8 +93,11 @@ private:
     void add_key(std::vector<std::string> &keys, int position);
 
     void show_all();
-    std::set<Book,cmp>get_all_sorted();
+
+    std::set<Book, cmp> get_all_sorted();
 };
+
 bool check_no_quote(const char *in);
-bool check_repeat(std::vector<std::string> &in) ;//有重为true
+
+bool check_repeat(std::vector<std::string> &in);//有重为true
 #endif //BOOKSTORE_2023_BOOK_SYSTEM_H

@@ -29,31 +29,32 @@ class Main_system {
 public:
 
 
-    //todo:检索和修改的输入检查！！！！{有重复附加参数为非法指令,附加参数内容为空则操作失败；}
     Main_system() {
         logSystem.Log_system_init(accountSystem, bookSystem, blogSystem);
         accountSystem.init(blogSystem);
         bookSystem.init(blogSystem, accountSystem);
         std::fstream file;
-        file.open("2int",std::ios::in|std::ios::out|std::ios::binary);
-        if (!file){
-            file.open("2int",std::ios::out|std::ios::binary);
+        file.open("2int", std::ios::in | std::ios::out | std::ios::binary);
+        if (!file) {
+            file.open("2int", std::ios::out | std::ios::binary);
             file.close();
-            file.open("2int",std::ios::in|std::ios::out|std::ios::binary);
-        } else{
-            file.read(reinterpret_cast<char*>(&bookSystem.end_of_book), sizeof(int));
-            file.read(reinterpret_cast<char*>(&accountSystem.last_position_of_account), sizeof(int));
+            file.open("2int", std::ios::in | std::ios::out | std::ios::binary);
+        } else {
+            file.read(reinterpret_cast<char *>(&bookSystem.end_of_book), sizeof(int));
+            file.read(reinterpret_cast<char *>(&accountSystem.last_position_of_account), sizeof(int));
         }
         file.close();
     };
-    ~Main_system(){
+
+    ~Main_system() {
         std::fstream file;
-        file.open("2int",std::ios::in|std::ios::out|std::ios::binary);
-        file.write(reinterpret_cast<char*>(&bookSystem.end_of_book), sizeof(int));
-        file.write(reinterpret_cast<char*>(&accountSystem.last_position_of_account), sizeof(int));
+        file.open("2int", std::ios::in | std::ios::out | std::ios::binary);
+        file.write(reinterpret_cast<char *>(&bookSystem.end_of_book), sizeof(int));
+        file.write(reinterpret_cast<char *>(&accountSystem.last_position_of_account), sizeof(int));
         file.close();
     }
-    //仅保证格式合法，不保证权限合法,todo char[]也许有非法字符！！！
+
+    //仅保证格式合法，不保证权限合法,char[]也许有非法字符
     //log
     void logout();
 
@@ -96,7 +97,4 @@ public:
 private:
 };
 
-bool privilege_check(int lowest_privilege);
-
 #endif //BOOKSTORE_2023_MAIN_SYSTEM_H
-//map

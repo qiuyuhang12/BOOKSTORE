@@ -24,9 +24,6 @@ void Account_system::init(Blog_system &blogSystem_) {
     blogSystem = &blogSystem_;
 }
 
-//void IV() {
-//    std::cout << "Invalid\n";
-//}
 bool check_num_letter_(const char *in) {
     int i = 0;
     while (in[i] != 0) {
@@ -44,8 +41,6 @@ bool check_num_letter_(const char *in) {
 
 Account_system::Account_system() : UserID_index_file("UserID_index_file") {
     UserID_index_file.initialize("UserID_index_file");
-//    char emp[31] = {0};
-//    loger_num[emp] = 1;
     file.open("accounts", std::ios::in | std::ios::out | std::ios::binary);
     if (!file) {
         file.open("accounts", std::ios::out | std::ios::binary);
@@ -57,7 +52,6 @@ Account_system::Account_system() : UserID_index_file("UserID_index_file") {
     if (!file) {
         std::cerr << "log file wrong";
     }
-//    useradd()
 }
 
 void Account_system::delete_(char *UserID) {
@@ -65,7 +59,7 @@ void Account_system::delete_(char *UserID) {
         IV();
         return;
     }
-    std::string s=UserID;
+    std::string s = UserID;
     if (loger_num[s] != 0) {
         IV();
         return;
@@ -73,30 +67,21 @@ void Account_system::delete_(char *UserID) {
         loger_num.erase(s);
     }
 
-//    if (!stack_kvd.find_no_output(UserID).empty()){
-//        IV();
-//        return;
-//    }
     std::vector<int> all = UserID_index_file.find_no_output(UserID);
     if (all.empty()) {
         IV();
         return;
     }
-//    erase(all.front());
     UserID_index_file.delete_(UserID, all.front());
     add_log();
 }
 
-//void Account_system::erase(int position) {
-//    file.seekp(position);
-//}
 void Account_system::passwd(char *UserID, char *NewPassword, char *CurrentPassword) {
     if (log_on_now.Privilege < 1) {
         IV();
         return;
     }
     if (check_num_letter_(NewPassword)) {
-//        IV();
         return;
     }
     std::vector<int> all = UserID_index_file.find_no_output(UserID);
@@ -126,13 +111,13 @@ void Account_system::passwd(char *UserID, char *NewPassword, char *CurrentPasswo
 
 Account Account_system::get(int position) {
     Account tmp;
-    file.seekg(position,std::ios::beg);
+    file.seekg(position, std::ios::beg);
     file.read(reinterpret_cast<char *>(&tmp), sizeof(Account));
     return tmp;
 }
 
 void Account_system::change(int position, Account &new_) {
-    file.seekp(position,std::ios::beg);
+    file.seekp(position, std::ios::beg);
     file.write(reinterpret_cast<char *>(&new_), sizeof(Account));
 }
 
@@ -142,7 +127,6 @@ void Account_system::useradd(char *UserID, char *Password, int Privilege, char *
         return;
     }
     if (check_num_letter_(UserID) || check_num_letter_(Password)) {
-//        IV();
         return;
     }
     if (Privilege != 1 && Privilege != 3) {
@@ -182,7 +166,6 @@ void Account_system::useradd_hard(char *UserID, char *Password, int Privilege, c
 
 void Account_system::register_(char *UserID, char *Password, char *Username) {
     if (check_num_letter_(UserID) || check_num_letter_(Password)) {
-//        IV();
         return;
     }
     if (!UserID_index_file.find_no_output(UserID).empty()) {
@@ -203,12 +186,11 @@ void Account_system::register_(char *UserID, char *Password, char *Username) {
 Account Account_system::get(char *UserID) {
     auto item = UserID_index_file.find_no_output(UserID);
     if (item.empty()) {
-//        IV();
-        throw Err();//v
+        throw Err();
     }
     int position = item.front();
     Account tmp;
-    file.seekg(position,std::ios::beg);
+    file.seekg(position, std::ios::beg);
     file.read(reinterpret_cast<char *>(&tmp), sizeof(Account));
     return tmp;
 }

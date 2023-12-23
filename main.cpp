@@ -5,7 +5,6 @@
 #include "main_system.h"
 #include <string>
 #include <cstring>
-#include <cstdlib>
 #include <assert.h>
 
 //
@@ -15,8 +14,6 @@ bool show_form_iv(std::string &in, index_type type);
 
 std::string get_information(std::string &in, index_type type);
 
-//输出Invalid
-//void IV();
 void clear_file() {
     remove("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/cmake-build-debug/accounts");
     remove("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/cmake-build-debug/books");
@@ -39,19 +36,11 @@ void clear_file() {
 
 int main() {
 //    clear_file();
-//    std::cout<<'\7';
-//    exit(0);
-//    freopen("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/tmp","w",stdout);
     Main_system mainSystem;
     std::string line;
     Catalog catalog;
     Dictionary dictionary;
-//    int i=0;
     while (getline(std::cin, line)) {
-        assert(!mainSystem.accountSystem.file.eof());
-        assert(!mainSystem.bookSystem.books.eof());
-//        i++;
-//        std::cout<<i;
         if (line.empty()) {
             continue;
         }
@@ -63,27 +52,9 @@ int main() {
         } catch (Err) {
             IV();
         }
-        {
-//            std::fstream fstream;
-//            fstream.open("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/code/cmake-build-debug/fAuthorcatalog",std::ios::in|std::ios::out|std::ios::binary);
-//            if (fstream){
-//                fstream.seekg(sizeof(Stack),std::ios::beg);
-//                fstream.read(reinterpret_cast<char*>(&catalog), sizeof(Catalog));
-//            }
-//            fstream.close();
-//            fstream.open("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/code/cmake-build-debug/fAuthordictionary",std::ios::in|std::ios::out|std::ios::binary);
-//            if (fstream){
-//                fstream.seekg(0,std::ios::beg);
-//                fstream.read(reinterpret_cast<char*>(&dictionary), sizeof(Dictionary));
-//            }
-        }
     }
     return 0;
 }
-
-//void IV() {
-//    std::cout << "Invalid\n";
-//}
 
 bool show_form_iv(std::string &in, index_type type) {
     bool rsl = false;
@@ -145,7 +116,7 @@ void check_invisible_(char *string) {
     }
 }
 
-std::string get_information(std::string &in, index_type type) {//todo测试
+std::string get_information(std::string &in, index_type type) {
     std::string tmp;
     switch (type) {
         case ISBN:
@@ -198,7 +169,6 @@ std::string get_information(std::string &in, index_type type) {//todo测试
     return tmp;
 }
 
-//bool check_quote_quote_blank
 void order_analyse(std::string &line, Main_system &mainSystem) {
     mainSystem.blogSystem.do_str = &line;
     Piece piece(line);
@@ -208,20 +178,12 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
     }
     std::string string1 = piece.get(), string2 = piece.get(), string3 = piece.get(), string4 = piece.get(), string5 = piece.get(), string6 = piece.get();
     if (order == "su") {
-//        char userid[31]={0};
-//        strcpy(userid,piece.get().c_str());
-//        char psw[31]={0};
-//        strcpy(psw,piece.get().c_str());
-//        assert(0);
         char userid[31] = {0}, psw[31] = {0};
         if (string1.size() > 30 || string2.size() > 30 || string1.empty() || !string3.empty()) {
             IV();
             return;
         }
         strcpy(userid, string1.c_str());
-//        if (strcmp(userid,"root")!=0){
-//            assert(0);
-//        }
         if (!string2.empty()) {
             strcpy(psw, string2.c_str());
             if (check_num_letter_(psw) || check_num_letter_(userid)) {
@@ -236,7 +198,6 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
             mainSystem.su(userid, psw);
         } else {
             if (check_num_letter_(userid)) {
-//                IV();
                 return;
             }
             if (strlen(userid) > 30) {
@@ -252,9 +213,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
             return;
         }
         mainSystem.logout();
-//        assert(0);
     } else if (order == "register") {
-//        assert(0);
         char userid[31] = {0}, psw[31] = {0}, username[31] = {0};
         if (string1.empty() || string2.empty() || string3.empty() || string1.size() > 30 || string2.size() > 30 ||
             string3.size() > 30 || !string4.empty()) {
@@ -277,7 +236,6 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         check_invisible_(username);
         mainSystem.register_(userid, psw, username);
     } else if (order == "passwd") {
-//        assert(0);
         char userid[31] = {0}, cpsw[31] = {0}, npsw[31] = {0};
         if (string1.empty() || string2.empty() || string1.size() > 30 || string2.size() > 30 ||
             string3.size() > 30 || !string4.empty()) {
@@ -313,7 +271,6 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
             mainSystem.passwd(userid, npsw, cpsw);
         }
     } else if (order == "useradd") {
-//        assert(0);
         char userid[31] = {0}, psw[31] = {0}, username[31] = {0};
         int pri = 0;
         if (string1.empty() || string2.empty() || string3.empty() || string4.empty() || string1.size() > 30 ||
@@ -339,17 +296,16 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         check_invisible_(username);
         mainSystem.useradd(userid, psw, pri, username);
     } else if (order == "delete") {
-//        assert(0);
         char userid[31] = {0};
         if (string1.empty() || string1.size() > 30 || !string2.empty()) {
             IV();
             return;
         }
         strcpy(userid, string1.c_str());
-        if (check_num_letter_(userid)){
+        if (check_num_letter_(userid)) {
             return;
         }
-        if ( strlen(userid) > 30) {
+        if (strlen(userid) > 30) {
             IV();
             return;
         }
@@ -357,7 +313,6 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         mainSystem.delete_(userid);
     } else if (order == "show") {
         if (string1 == "finance") {
-//            assert(0);
             if (mainSystem.accountSystem.log_on_now.Privilege < 7) {
                 IV();
                 return;
@@ -382,7 +337,6 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
             }
             return;
         }
-//        assert(0);
         if (!string2.empty()) {
             IV();
             return;
@@ -440,7 +394,6 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
                 }
                 strcpy(inf, get_information(string1, keyword).c_str());
                 if (check_no_quote(inf)) {
-//                    check_repeat()
                     IV();
                     return;
                 }
@@ -455,7 +408,6 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
             }
         }
     } else if (order == "buy") {
-//        assert(0);
         char isbn[21] = {0};
         int q = 0;
         if (string1.empty() || string2.empty() || string1.size() > 20 || string2.size() > 10
@@ -483,7 +435,6 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         check_invisible_(isbn);
         mainSystem.buy(isbn, q);
     } else if (order == "select") {
-//        assert(0);
         char isbn[21] = {0};
         if (string1.empty() || string1.size() > 30 || !string2.empty()) {
             IV();
@@ -496,8 +447,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         }
         mainSystem.select(isbn);
     } else if (order == "modify") {
-        //todo查重，查格式
-//        assert(0);
+        //查重，查格式
         if (!string6.empty()) {
             IV();
             return;
@@ -576,13 +526,11 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
                 trans[i] = information[i];
             }
         }
-        //null,isbn,name,author,keyword,price;
         for (int i = 1; i < 6; ++i) {
             check_invisible_(trans[i]);
         }
         mainSystem.modify(trans[1], trans[2], trans[3], trans[4], trans[5]);
     } else if (order == "import") {
-//        assert(0);
         int q = 0, ti = 0, tf = 0;
         if (string1.empty() || string2.empty() || string1.size() > 10 || string2.size() > 13
             || !string3.empty()) {
@@ -608,13 +556,10 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         for (int i = 0; i < string2.size(); ++i) {
             if (string2[i] == '.') {
                 if (string2.size() >= i + 4 || string2.size() == i + 1) {//不是.不是.xxx
-//                    IV();
-//                    int a;
                     throw Err();
                 }
                 if (string2.size() == i + 2) {//是.x
                     if (string2[i + 1] > '9' || string2[i + 1] < '0') {
-//                        IV();
                         throw Err();
                     }
                     tf = (string2[i + 1] - '0') * 10;
@@ -623,12 +568,11 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
                 if (string2.size() == i + 3) {//是.xx
                     if (string2[i + 1] > '9' || string2[i + 1] < '0' || string2[i + 2] > '9' || string2[i + 2] < '0' ||
                         string2[i + 3] != 0) {
-//                        IV();
                         throw Err();
                     }
                     tf = (string2[i + 1] - '0') * 10 + string2[i + 2] - '0';
                 }
-                break;//todo:会不会少报invalid
+                break;
             }
             if (string2[i] > '9' || string2[i] < '0') {
                 IV();
@@ -643,7 +587,6 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         }
         mainSystem.import(q, ti, tf);
     } else if (order == "log") {
-//        assert(0);
         if (mainSystem.accountSystem.log_on_now.Privilege < 7) {
             IV();
             return;
@@ -654,7 +597,6 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         }
         mainSystem.log();
     } else if (order == "report") {
-//        assert(0);
         if (mainSystem.accountSystem.log_on_now.Privilege < 7) {
             IV();
             return;
@@ -671,75 +613,3 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
     } else IV();
 }
 
-//account_system.cpp blog_system.cpp book_system.cpp key_value_database.cpp log_system.cpp main.cpp main_system.cpp
-
-//su root sjtu
-//select a
-//import 10 100.9
-//show finance
-//import 20 874.32
-//show finance
-//show finance 1
-//show finance 2
-//show finance 3
-//check_num_letter_
-//check_no_quote(
-//check_split(
-//check_repeat(
-//check_kyw_length(
-//check(
-//check_invisible(//有throw
-//check_invisible_(
-//Check
-
-//throw
-
-//
-//su root sjtu
-//
-//
-//passwd root sjd
-//
-//passwd 23)4#$r
-//
-//useradd isjf_S ds 3 dfs
-
-
-//su root sjtu
-//passwd root sjd
-//passwd 23)4#$r
-//useradd isjf_S ds 3 dfsInvalid
-//passwd root 2132@#
-//su s)
-//su 2*_
-//useradd a a 3 4
-//su hfsi
-//su 2:
-//su a 2#
-//su a a_
-//delete @#
-//show finance
-//show finance 4
-//show finance 1
-//show finance 0
-//show finance -1
-//show finance 1 1
-//select a
-//import 34 34
-//import 2.3 2
-//import 1231 32123213
-//import 00000023
-//import 0000123 032.3
-//show
-//show finance
-//show finance
-//show finance
-//show finance
-//show finance 1
-//show finance 0
-//log
-//show
-//report finance
-//show finance
-
-//fstream

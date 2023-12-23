@@ -94,7 +94,7 @@ void Key_value_database::find(const char key[65]) {
     Dictionary dictionary;
     if (maybe.size() == 1) {
         open(dictionary_file_name);
-        file.seekg(maybe[0],std::ios::beg);
+        file.seekg(maybe[0], std::ios::beg);
         file.read(reinterpret_cast<char *>(&dictionary), sizeof(Dictionary));
         file.close();
         bool flag = false;
@@ -114,7 +114,7 @@ void Key_value_database::find(const char key[65]) {
     }
     if (maybe.size() == 2) {
         open(dictionary_file_name);
-        file.seekg(maybe[0],std::ios::beg);
+        file.seekg(maybe[0], std::ios::beg);
         file.read(reinterpret_cast<char *>(&dictionary), sizeof(Dictionary));
         for (int i = 0; i < dictionary.num; ++i) {
             int cmp = strcmp(key, dictionary.key[i]);
@@ -128,7 +128,7 @@ void Key_value_database::find(const char key[65]) {
                 break;
             }
         }
-        file.seekg(maybe[1],std::ios::beg);
+        file.seekg(maybe[1], std::ios::beg);
         file.read(reinterpret_cast<char *>(&dictionary), sizeof(Dictionary));
         for (int i = 0; i < dictionary.num; ++i) {
             int cmp = strcmp(key, dictionary.key[i]);
@@ -146,7 +146,7 @@ void Key_value_database::find(const char key[65]) {
     if (maybe.size() > 2) {
         open(dictionary_file_name);
         auto iter = maybe.begin();
-        file.seekg(*iter,std::ios::beg);
+        file.seekg(*iter, std::ios::beg);
         iter++;
         file.read(reinterpret_cast<char *>(&dictionary), sizeof(Dictionary));
         for (int i = 0; i < dictionary.num; ++i) {
@@ -162,14 +162,14 @@ void Key_value_database::find(const char key[65]) {
             }
         }
         while (iter != maybe.end() - 1) {
-            file.seekg(*iter,std::ios::beg);
+            file.seekg(*iter, std::ios::beg);
             iter++;
             file.read(reinterpret_cast<char *>(&dictionary), sizeof(Dictionary));
             for (int i = 0; i < dictionary.num; ++i) {
                 std::cout << dictionary.value[i] << ' ';
             }
         }
-        file.seekg(*iter,std::ios::beg);
+        file.seekg(*iter, std::ios::beg);
         file.read(reinterpret_cast<char *>(&dictionary), sizeof(Dictionary));
         for (int i = 0; i < dictionary.num; ++i) {
             int cmp = strcmp(key, dictionary.key[i]);
@@ -191,13 +191,12 @@ std::vector<int> Key_value_database::find_no_output(const char key[65]) {
     std::vector<int> all;
     bool find = find_blocks(key, maybe);
     if (!find) {
-//        std::cout << "null" << std::endl;
         return all;
     }
     Dictionary dictionary;
     if (maybe.size() == 1) {
         open(dictionary_file_name);
-        file.seekg(maybe[0],std::ios::beg);
+        file.seekg(maybe[0], std::ios::beg);
         file.read(reinterpret_cast<char *>(&dictionary), sizeof(Dictionary));
         file.close();
         bool flag = false;
@@ -208,22 +207,13 @@ std::vector<int> Key_value_database::find_no_output(const char key[65]) {
             }
             if (cmp == 0) {
                 flag = true;
-//                std::cout << dictionary.value[i] << ' ';
                 all.push_back(dictionary.value[i]);
             }
         }
-//        if (flag){
-//            std::cout << std::endl;
-//        }
-//        else {
-//            std::cout << "null\n";
-//            return false;
-//        }
-//        return all;
     }
     if (maybe.size() == 2) {
         open(dictionary_file_name);
-        file.seekg(maybe[0],std::ios::beg);
+        file.seekg(maybe[0], std::ios::beg);
         file.read(reinterpret_cast<char *>(&dictionary), sizeof(Dictionary));
         for (int i = 0; i < dictionary.num; ++i) {
             int cmp = strcmp(key, dictionary.key[i]);
@@ -232,14 +222,12 @@ std::vector<int> Key_value_database::find_no_output(const char key[65]) {
             }
             if (cmp == 0) {
                 for (int j = i; j < dictionary.num; ++j) {
-//                    std::cout << dictionary.value[j] << ' ';
                     all.push_back(dictionary.value[j]);
-//                    return true;
                 }
                 break;
             }
         }
-        file.seekg(maybe[1],std::ios::beg);
+        file.seekg(maybe[1], std::ios::beg);
         file.read(reinterpret_cast<char *>(&dictionary), sizeof(Dictionary));
         for (int i = 0; i < dictionary.num; ++i) {
             int cmp = strcmp(key, dictionary.key[i]);
@@ -247,19 +235,15 @@ std::vector<int> Key_value_database::find_no_output(const char key[65]) {
                 break;
             }
             if (cmp == 0) {
-//                std::cout << dictionary.value[i] << ' ';
                 all.push_back(dictionary.value[i]);
-//                return true;
             }
         }
-//        std::cout << '\n';
         file.close();
-//        return all;
     }
     if (maybe.size() > 2) {
         open(dictionary_file_name);
         auto iter = maybe.begin();
-        file.seekg(*iter,std::ios::beg);
+        file.seekg(*iter, std::ios::beg);
         iter++;
         file.read(reinterpret_cast<char *>(&dictionary), sizeof(Dictionary));
         for (int i = 0; i < dictionary.num; ++i) {
@@ -269,24 +253,20 @@ std::vector<int> Key_value_database::find_no_output(const char key[65]) {
             }
             if (cmp == 0) {
                 for (int j = i; j < dictionary.num; ++j) {
-//                    std::cout << dictionary.value[j] << ' ';
                     all.push_back(dictionary.value[j]);
-//                    return true;
                 }
                 break;
             }
         }
         while (iter != maybe.end() - 1) {
-            file.seekg(*iter,std::ios::beg);
+            file.seekg(*iter, std::ios::beg);
             iter++;
             file.read(reinterpret_cast<char *>(&dictionary), sizeof(Dictionary));
             for (int i = 0; i < dictionary.num; ++i) {
-//                std::cout << dictionary.value[i] << ' ';
                 all.push_back(dictionary.value[i]);
-//                return true;
             }
         }
-        file.seekg(*iter,std::ios::beg);
+        file.seekg(*iter, std::ios::beg);
         file.read(reinterpret_cast<char *>(&dictionary), sizeof(Dictionary));
         for (int i = 0; i < dictionary.num; ++i) {
             int cmp = strcmp(key, dictionary.key[i]);
@@ -294,14 +274,10 @@ std::vector<int> Key_value_database::find_no_output(const char key[65]) {
                 break;
             }
             if (cmp == 0) {
-//                std::cout << dictionary.value[i] << ' ';
                 all.push_back(dictionary.value[i]);
-//                return true;
             }
         }
-//        std::cout << '\n';
         file.close();
-//        return all;
     }
     return all;
 }
@@ -401,16 +377,17 @@ void Key_value_database::insert(char key[65], int value) {
         Dictionary dictionary;
         file.read(reinterpret_cast<char *>(&dictionary), sizeof(Dictionary));
         dictionary.num++;
-        int flag=0;
-        for (int i = 0; i < dictionary.num-1; ++i) {
-            if (strcmp(key,dictionary.key[i])<0||(strcmp(key,dictionary.key[i])==0&&value<dictionary.value[i])){
-                flag=i;
+        int flag = 0;
+        for (int i = 0; i < dictionary.num - 1; ++i) {
+            if (strcmp(key, dictionary.key[i]) < 0 ||
+                (strcmp(key, dictionary.key[i]) == 0 && value < dictionary.value[i])) {
+                flag = i;
             }
-            if (i==dictionary.num-2){
-                flag=dictionary.num-1;
+            if (i == dictionary.num - 2) {
+                flag = dictionary.num - 1;
             }
         }
-        for (int j = dictionary.num ; j > flag; --j) {
+        for (int j = dictionary.num; j > flag; --j) {
             dictionary.value[j] = dictionary.value[j - 1];
             std::swap(dictionary.key[j], dictionary.key[j - 1]);
         }
@@ -418,7 +395,7 @@ void Key_value_database::insert(char key[65], int value) {
         for (int i = 0; i < key_length; ++i) {
             dictionary.key[flag][i] = key[i];
         }
-        file.seekp(0,std::ios::beg);
+        file.seekp(0, std::ios::beg);
         file.write(reinterpret_cast<char *>(&dictionary), sizeof(Dictionary));
         file.close();
         if (dictionary.num > split_value) {
@@ -503,7 +480,7 @@ void Key_value_database::delete_(const char key[65], int value) {
                         catalog.key[x_th_in_catalog][j] = dictionary.key[0][j];
                     }
                 }
-                if (dictionary.num==0&&catalog.used_block==1){
+                if (dictionary.num == 0 && catalog.used_block == 1) {
                     catalog.used_block--;
                 }
                 file.seekp(begin_of_catalog);
@@ -669,13 +646,13 @@ void Key_value_database::split(unsigned long long block_position_in_dictionary, 
     }
 }
 
-std::vector<unsigned long long > Key_value_database::get_th_to_posi_map() {
+std::vector<unsigned long long> Key_value_database::get_th_to_posi_map() {
     std::vector<unsigned long long> tmp;
     open(catalog_file_name);
     file.seekg(begin_of_catalog);
     Catalog catalog;
-    file.read(reinterpret_cast<char*>(&catalog), sizeof(Catalog));
-    for (auto i:catalog.address) {
+    file.read(reinterpret_cast<char *>(&catalog), sizeof(Catalog));
+    for (auto i: catalog.address) {
         tmp.push_back(i);
     }
     file.close();
@@ -687,7 +664,7 @@ std::vector<int> Key_value_database::get_whole_block(unsigned long long position
     open(dictionary_file_name);
     file.seekg(position);
     Dictionary dictionary;
-    file.read(reinterpret_cast<char*>(&dictionary), sizeof(Dictionary));
+    file.read(reinterpret_cast<char *>(&dictionary), sizeof(Dictionary));
     for (int j = 0; j < dictionary.num; ++j) {
         tmp.push_back(dictionary.value[j]);
     }

@@ -45,9 +45,7 @@ void Book_system::init(Blog_system &blogSystem_, Account_system &accountSystem_)
     blogSystem = &blogSystem_;
     accountSystem1 = &accountSystem_;
 }
-//void IV() {
-//    std::cout << "Invalid\n";
-//}
+
 
 bool check_no_quote(const char *in) {
     if (in == nullptr) {
@@ -77,22 +75,25 @@ Book_system::Book_system() : fAuthor("fAuthor"), fBookName("fBookName"), fISBN("
     fAuthor.initialize("fAuthor");
     fBookName.initialize("fBookName");
 }
-bool cmpp(const Book lhs,const Book rhs){
-    if (strcmp(lhs.ISBN,rhs.ISBN)<0) {
+
+bool cmpp(const Book lhs, const Book rhs) {
+    if (strcmp(lhs.ISBN, rhs.ISBN) < 0) {
         return true;
     }
     return false;
 }
-bool check_split(char *in){
-    int i=0;
-    while (in[i]!=0){
-        if (in[i]=='|'){
+
+bool check_split(char *in) {
+    int i = 0;
+    while (in[i] != 0) {
+        if (in[i] == '|') {
             return true;
         }
         i++;
     }
     return false;
 }
+
 void Book_system::show(char *index, index_type type) {
     if (accountSystem1->log_on_now.Privilege < 1) {
         IV();
@@ -114,19 +115,19 @@ void Book_system::show(char *index, index_type type) {
             all = fAuthor.find_no_output(index);
             break;
         case keyword:
-            if (check_split(index)){
+            if (check_split(index)) {
                 IV();
                 return;
             }
             all = fKeyWord.find_no_output(index);
             break;
     }
-    std::set<Book,cmp> bs;
+    std::set<Book, cmp> bs;
     for (int pos: all) {
         Book book = get(pos);
         bs.insert(book);
     }
-    for (auto book:bs) {
+    for (auto book: bs) {
         std::cout << book;
     }
     if (all.empty()) {
@@ -134,7 +135,6 @@ void Book_system::show(char *index, index_type type) {
     }
     Price price1, price2;
     add_log(price1, price2);
-//    add_log(Price(0),Price(0));
 }
 
 void Book_system::buy(char *ISBN, long long Quantity) {
@@ -162,9 +162,6 @@ void Book_system::buy(char *ISBN, long long Quantity) {
     add_finance(price_in, price_out, ISBN, accountSystem1->log_on_now.UserID, Quantity);
 }
 
-//already done:新旧都需改索引文件
-
-//todo:xiu
 void Book_system::select(char *ISBN) {
     if (accountSystem1->log_on_now.Privilege < 3) {
         IV();
@@ -241,7 +238,7 @@ std::vector<std::string> piece_keyword(char *keyword) {
         char now = keyword[position];
         if (now == '|') {
             all.push_back(tmp);
-            tmp="";
+            tmp = "";
         } else {
             tmp += now;
         }
@@ -263,22 +260,24 @@ bool check_repeat(std::vector<std::string> &in) {//有重为true
     }
     return false;
 }
-bool check_kyw_length(char *in){
-    if (in[0]==0||in[0]=='|'){
+
+bool check_kyw_length(char *in) {
+    if (in[0] == 0 || in[0] == '|') {
         return true;
     }
-    int i=1;
-    while (in[i]!=0){
-        if (in[i]=='|'&&in[i-1]=='|'){
+    int i = 1;
+    while (in[i] != 0) {
+        if (in[i] == '|' && in[i - 1] == '|') {
             return true;
         }
         i++;
     }
-    if (in[i-1]=='|'){
+    if (in[i - 1] == '|') {
         return true;
     }
     return false;
 }
+
 void Book_system::modify(char *ISBN, char *name, char *author, char *keyword, char *price) {
     if (accountSystem1->log_on_now.Privilege < 3) {
         IV();
@@ -299,9 +298,9 @@ void Book_system::modify(char *ISBN, char *name, char *author, char *keyword, ch
         }
     }
 
-    Book old = selected;//todo测试这是否合法
+    Book old = selected;
     if (keyword != nullptr) {
-        if (check_kyw_length(keyword)){
+        if (check_kyw_length(keyword)) {
             IV();
             return;
         }
@@ -338,7 +337,6 @@ void Book_system::modify(char *ISBN, char *name, char *author, char *keyword, ch
             return;
         }
     }
-
 
 
     if (price != nullptr) {
@@ -383,7 +381,7 @@ void Book_system::modify(char *ISBN, char *name, char *author, char *keyword, ch
     }
     if (author != nullptr) {
         strcpy(selected.Author, author);
-        if (strcmp(old.Author,"")!=0){
+        if (strcmp(old.Author, "") != 0) {
             fAuthor.delete_(old.Author, select_position);
         }
         fAuthor.insert(author, select_position);
@@ -424,7 +422,6 @@ void Book_system::delete_key(char *in, int position) {
     }
 }
 
-//todo:key_value_database是64大小数组，如果传小了会不会出问题？一定会！！！嘶，基于strcmp的话可能没问题。
 void Book_system::add_key(std::vector<std::string> &keys, int position) {
     for (const auto &i: keys) {
         char key[61] = {0};
@@ -437,14 +434,6 @@ void Book_system::show_all() {
     for (auto item: get_all_sorted()) {
         std::cout << item;
     }
-//    std::vector<unsigned long long > pos_in_kvd=fISBN.get_th_to_posi_map();//1->1st的位置序;
-//    for (unsigned long long i:pos_in_kvd) {
-//        std::vector<int> pos_in_books=fISBN.get_whole_block(i);
-//        for (int j:pos_in_books) {
-//            Book book= get(j);
-//            std::cout<<book;
-//        }
-//    }
 }
 
 void Book_system::change(int position, Book &new_) {
@@ -461,7 +450,6 @@ Book Book_system::get(int position) {
 
 std::set<Book, cmp> Book_system::get_all_sorted() {
     books.flush();
-//    std::cout<<books.tellg();
     std::set<Book, cmp> tmp;
     books.seekg(0, std::ios::beg);
     Book in;

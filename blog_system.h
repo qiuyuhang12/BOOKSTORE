@@ -6,23 +6,21 @@
 #define BOOKSTORE_2023_BLOG_SYSTEM_H
 
 #include <key_value_database.h>
-//#include "book_system.h"
 
 #include "iostream"
-//struct Price;
-//struct Book;
+
+
 class Blog_system;
+
 void IV();
 
 //财务
 
-struct Err{};
-struct Price {
-//    Price()=default;
+struct Err {
+};
 
-//    Price(int a){
-//        integer=a;
-//    }
+struct Price {
+
     long long integer = 0;
     long long float_ = 0;
 
@@ -38,6 +36,7 @@ struct Price {
 
     friend Price operator*(long long &lhs, Price &rhs);
 };
+
 struct Book {
     char ISBN[21] = {0};
     char BookName[61] = {0};
@@ -49,45 +48,48 @@ struct Book {
 
     friend std::ostream &operator<<(std::ostream &out, Book &book);
 };
+
 Price operator+(Price &lhs, Price &rhs);
 
 Price operator-(Price &lhs, Price &rhs);
 
 Price operator*(int &lhs, Price &rhs);
 
-struct Count{
+struct Count {
     Price money_in;
     Price money_out;
 };
-struct Finance_table{
+struct Finance_table {
     Price money_in;
     Price money_out;
-    char UserID[31]={0};
-    char do_[6]={0};//buy or import
-    char ISBN[20]={0};
-    int Quality=0;
+    char UserID[31] = {0};
+    char do_[6] = {0};//buy or import
+    char ISBN[20] = {0};
+    int Quality = 0;
 };
-struct Employee_table{
-    char UserID[31]={0};
-    char do_[300]={0};
+struct Employee_table {
+    char UserID[31] = {0};
+    char do_[300] = {0};
 };
-struct Do_table{
+struct Do_table {
     Price in;
     Price out;
-    char UserID[31]={0};
-    char do_[300]={0};
+    char UserID[31] = {0};
+    char do_[300] = {0};
 };
 
 class Blog_system {
 public:
     //保证格式、权限合法，不保证输入（如特定user）存在
     Blog_system();
-    ~Blog_system(){
+
+    ~Blog_system() {
         count_file.close();
         report_finance_file.close();
         report_employee_file.close();
         log_file.close();
     }
+
     void show_finance(int count = -1);
 
     void log();
@@ -97,13 +99,19 @@ public:
     void report_employee();
 
     void add_count(Count &count);
-    void add_finance(Finance_table&financeTable);
-    void add_employee(Employee_table&employeeTable);
-    void add_log(Do_table&doTable);
-    std::string *do_str= nullptr;
+
+    void add_finance(Finance_table &financeTable);
+
+    void add_employee(Employee_table &employeeTable);
+
+    void add_log(Do_table &doTable);
+
+    std::string *do_str = nullptr;
 private:
     Count get_last();
+
     Count get_count(int count);
+
     std::fstream count_file;
     std::fstream report_finance_file;
     std::fstream report_employee_file;

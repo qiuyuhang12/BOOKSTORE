@@ -160,7 +160,6 @@ void Blog_system::show_finance(int count) {
 }
 
 void Blog_system::log() {
-    //todo:-1了seek还有用吗
     log_file.flush();
     log_file.seekg(0, std::ios::beg);
     std::cout << std::setw(13 + 2) << "MONEYIN" << " \t" << std::setw(13 + 1) << "MONEYOUT" << " \t" << std::setw(23)
@@ -248,9 +247,3 @@ void Blog_system::add_log(Do_table &doTable) {
     log_file.seekp(0, std::ios::end);
     log_file.write(reinterpret_cast<char *>(&doTable), sizeof(Do_table));
 }
-
-//su root sjtu
-//select a
-//import 1000 99.99
-//show
-//show finance
