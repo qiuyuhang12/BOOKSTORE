@@ -96,7 +96,7 @@ void Account_system::passwd(char *UserID, char *NewPassword, char *CurrentPasswo
         return;
     }
     if (check_num_letter_(NewPassword)) {
-        IV();
+//        IV();
         return;
     }
     std::vector<int> all = UserID_index_file.find_no_output(UserID);
@@ -142,7 +142,7 @@ void Account_system::useradd(char *UserID, char *Password, int Privilege, char *
         return;
     }
     if (check_num_letter_(UserID) || check_num_letter_(Password)) {
-        IV();
+//        IV();
         return;
     }
     if (Privilege != 1 && Privilege != 3) {
@@ -182,7 +182,7 @@ void Account_system::useradd_hard(char *UserID, char *Password, int Privilege, c
 
 void Account_system::register_(char *UserID, char *Password, char *Username) {
     if (check_num_letter_(UserID) || check_num_letter_(Password)) {
-        IV();
+//        IV();
         return;
     }
     if (!UserID_index_file.find_no_output(UserID).empty()) {

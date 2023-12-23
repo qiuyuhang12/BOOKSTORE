@@ -130,7 +130,7 @@ void check_invisible(std::string string) {
 }
 
 void check_invisible_(char *string) {
-    if (string==nullptr){
+    if (string == nullptr) {
         return;
     }
     int i0 = 0;
@@ -222,7 +222,10 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
 //        }
         if (!string2.empty()) {
             strcpy(psw, string2.c_str());
-            if (check_num_letter_(psw) || check_num_letter_(userid) || strlen(psw) > 30 || strlen(userid) > 30) {
+            if (check_num_letter_(psw) || check_num_letter_(userid)) {
+                return;
+            }
+            if (strlen(psw) > 30 || strlen(userid) > 30) {
                 IV();
                 return;
             }
@@ -230,7 +233,10 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
             check_invisible_(psw);
             mainSystem.su(userid, psw);
         } else {
-            if (check_num_letter_(userid) || strlen(userid) > 30) {
+            if (check_num_letter_(userid)) {
+                IV();
+            }
+            if (strlen(userid) > 30) {
                 IV();
                 return;
             }
@@ -255,7 +261,10 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         strcpy(userid, string1.c_str());
         strcpy(psw, string2.c_str());
         strcpy(username, string3.c_str());
-        if (check_num_letter_(psw) || check_num_letter_(userid) || strlen(userid) > 30 || strlen(psw) > 30 ||
+        if (check_num_letter_(psw) || check_num_letter_(userid)) {
+            return;
+        }
+        if (strlen(userid) > 30 || strlen(psw) > 30 ||
             strlen(username) > 30) {
             IV();
             return;
@@ -275,7 +284,10 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         strcpy(userid, string1.c_str());
         if (string3.empty()) {
             strcpy(npsw, string2.c_str());
-            if (check_num_letter_(npsw) || check_num_letter_(userid) || strlen(userid) > 30 || strlen(npsw) > 30) {
+            if (check_num_letter_(npsw) || check_num_letter_(userid)) {
+                return;
+            }
+            if (strlen(userid) > 30 || strlen(npsw) > 30) {
                 IV();
                 return;
             }
@@ -285,8 +297,10 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         } else {
             strcpy(cpsw, string2.c_str());
             strcpy(npsw, string3.c_str());
-            if (check_num_letter_(npsw) || check_num_letter_(cpsw) || check_num_letter_(userid) ||
-                strlen(userid) > 30 || strlen(npsw) > 30 || strlen(cpsw) > 30) {
+            if (check_num_letter_(npsw) || check_num_letter_(cpsw) || check_num_letter_(userid)) {
+                return;
+            }
+            if (strlen(userid) > 30 || strlen(npsw) > 30 || strlen(cpsw) > 30) {
                 IV();
                 return;
             }
@@ -329,7 +343,10 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
             return;
         }
         strcpy(userid, string1.c_str());
-        if (check_num_letter_(userid) || strlen(userid) > 30) {
+        if (check_num_letter_(userid)){
+            return;
+        }
+        if ( strlen(userid) > 30) {
             IV();
             return;
         }
@@ -625,7 +642,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         }
         mainSystem.import(q, ti, tf);
     } else if (order == "log") {
-        assert(0);
+//        assert(0);
         if (mainSystem.accountSystem.log_on_now.Privilege < 7) {
             IV();
             return;
@@ -636,7 +653,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         }
         mainSystem.log();
     } else if (order == "report") {
-        assert(0);
+//        assert(0);
         if (mainSystem.accountSystem.log_on_now.Privilege < 7) {
             IV();
             return;

@@ -85,7 +85,7 @@ bool check(const char *in) {
 
 void Log_system::su(char *UserID, char *Password) {
     if (check(UserID) || check(Password)) {
-        IV();
+//        IV();
         return;
     }
     Account account = accountSystem->get(UserID);

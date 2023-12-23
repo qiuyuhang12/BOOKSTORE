@@ -186,6 +186,7 @@ void Book_system::select(char *ISBN) {
     selected = tmp;
     Price price_in, price_out;
     add_log(price_in, price_out);
+    add_employ();
 }
 
 Price to_price(char *price) {
