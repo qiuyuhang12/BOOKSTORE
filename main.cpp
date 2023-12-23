@@ -435,7 +435,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         mainSystem.select(isbn);
     } else if (order == "modify") {
         //todo查重，查格式
-        assert(0);
+//        assert(0);
         if (!string6.empty()) {
             IV();
             return;
@@ -517,6 +517,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         //null,isbn,name,author,keyword,price;
         mainSystem.modify(trans[1], trans[2], trans[3], trans[4], trans[5]);
     } else if (order == "import") {
+        assert(0);
         int q = 0, ti = 0, tf = 0;
         if (string1.empty() || string2.empty() || string1.size() > 10 || string2.size() > 13
             || !string3.empty()) {
