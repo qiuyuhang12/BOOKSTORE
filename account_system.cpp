@@ -145,7 +145,7 @@ void Account_system::useradd(char *UserID, char *Password, int Privilege, char *
         IV();
         return;
     }
-    if (Privilege != 0 && Privilege != 1 && Privilege != 3) {
+    if (Privilege != 1 && Privilege != 3) {
         IV();
         return;
     }

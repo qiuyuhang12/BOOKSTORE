@@ -193,9 +193,9 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
             return;
         }
         strcpy(userid, string1.c_str());
-        if (strcmp(userid,"root")!=0){
-            assert(0);
-        }
+//        if (strcmp(userid,"root")!=0){
+//            assert(0);
+//        }
         if (!string2.empty()) {
             strcpy(psw, string2.c_str());
             if (check_num_letter_(psw) || check_num_letter_(userid) || strlen(psw) > 30 || strlen(userid) > 30) {
@@ -277,7 +277,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         if (check_num_letter_(psw) || check_num_letter_(userid)) {
             return;
         }
-        if ((pri != 0 && pri != 1 && pri != 3 && pri != 7) ||
+        if ((pri != 1 && pri != 3 && pri != 7) ||
             strlen(userid) > 30 || strlen(username) > 30 || strlen(psw) > 30) {
             IV();
             return;
