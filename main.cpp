@@ -606,14 +606,13 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
             if (string2[i] == '.') {
                 if (string2.size() >= i + 4 || string2.size() == i + 1) {//不是.不是.xxx
 //                    IV();
-                    int a;
-                    throw a;
+//                    int a;
+                    throw Err();
                 }
                 if (string2.size() == i + 2) {//是.x
                     if (string2[i + 1] > '9' || string2[i + 1] < '0') {
 //                        IV();
-                        int a;
-                        throw a;
+                        throw Err();
                     }
                     tf = (string2[i + 1] - '0') * 10;
                     break;
@@ -622,8 +621,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
                     if (string2[i + 1] > '9' || string2[i + 1] < '0' || string2[i + 2] > '9' || string2[i + 2] < '0' ||
                         string2[i + 3] != 0) {
 //                        IV();
-                        int a;
-                        throw a;
+                        throw Err();
                     }
                     tf = (string2[i + 1] - '0') * 10 + string2[i + 2] - '0';
                 }
@@ -681,3 +679,13 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
 //show finance 1
 //show finance 2
 //show finance 3
+//check_no_quote(
+//check_split(
+//check_repeat(
+//check_kyw_length(
+//check(
+//check_invisible(//有throw
+//check_invisible_(
+//Check
+
+//throw

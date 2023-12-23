@@ -88,7 +88,13 @@ void Log_system::su(char *UserID, char *Password) {
 //        IV();
         return;
     }
-    Account account = accountSystem->get(UserID);
+    Account account;
+    try {
+        account = accountSystem->get(UserID);
+    } catch (Err) {
+        IV();
+        return;
+    }
     if (Password == nullptr) {
         if (accountSystem->log_on_now.Privilege <= account.Privilege) {
             IV();

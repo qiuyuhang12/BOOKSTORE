@@ -204,7 +204,7 @@ Account Account_system::get(char *UserID) {
     auto item = UserID_index_file.find_no_output(UserID);
     if (item.empty()) {
 //        IV();
-        throw Err();
+        throw Err();//v
     }
     int position = item.front();
     Account tmp;
