@@ -258,7 +258,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
             mainSystem.passwd(userid, npsw, cpsw);
         }
     } else if (order == "useradd") {
-        assert(0);
+//        assert(0);
         char userid[31] = {0}, psw[31] = {0}, username[31] = {0};
         int pri = 0;
         if (string1.empty() || string2.empty() || string3.empty() || string4.empty() || string1.size() > 30 ||
@@ -281,6 +281,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         }
         mainSystem.useradd(userid, psw, pri, username);
     } else if (order == "delete") {
+        assert(0);
         char userid[31] = {0};
         if (string1.empty() || string1.size() > 30 || !string2.empty()) {
             IV();
