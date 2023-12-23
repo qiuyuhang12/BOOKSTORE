@@ -35,7 +35,7 @@ void clear_file() {
 }
 
 int main() {
-    clear_file();
+//    clear_file();
     Main_system mainSystem;
     std::string line;
     while (getline(std::cin, line)) {
