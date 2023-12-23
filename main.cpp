@@ -215,7 +215,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         mainSystem.logout();
 //        assert(0);
     } else if (order == "register") {
-        assert(0);
+//        assert(0);
         char userid[31] = {0}, psw[31] = {0}, username[31] = {0};
         if (string1.empty() || string2.empty() || string3.empty() || string1.size() > 30 || string2.size() > 30 ||
             string3.size() > 30 || !string4.empty()) {
@@ -232,6 +232,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         }
         mainSystem.register_(userid, psw, username);
     } else if (order == "passwd") {
+        assert(0);
         char userid[31] = {0}, cpsw[31] = {0}, npsw[31] = {0};
         if (string1.empty() || string2.empty() || string1.size() > 30 || string2.size() > 30 ||
             string3.size() > 30 || !string4.empty()) {
