@@ -38,7 +38,7 @@ void clear_file() {
 }
 
 int main() {
-//    clear_file();
+    clear_file();
 //    exit(0);
 //    freopen("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/tmp","w",stdout);
     Main_system mainSystem;
@@ -193,6 +193,9 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
             return;
         }
         strcpy(userid, string1.c_str());
+        if (strcmp(userid,"root")==0){
+            assert(0);
+        }
         if (!string2.empty()) {
             strcpy(psw, string2.c_str());
             if (check_num_letter_(psw) || check_num_letter_(userid) || strlen(psw) > 30 || strlen(userid) > 30) {
@@ -517,7 +520,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         //null,isbn,name,author,keyword,price;
         mainSystem.modify(trans[1], trans[2], trans[3], trans[4], trans[5]);
     } else if (order == "import") {
-        assert(0);
+//        assert(0);
         int q = 0, ti = 0, tf = 0;
         if (string1.empty() || string2.empty() || string1.size() > 10 || string2.size() > 13
             || !string3.empty()) {
