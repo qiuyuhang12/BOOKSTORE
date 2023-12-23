@@ -38,8 +38,8 @@ void clear_file() {
 }
 
 int main() {
-//    clear_file();
-//    std::cout<<'\26';
+    clear_file();
+//    std::cout<<'\7';
 //    exit(0);
 //    freopen("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/tmp","w",stdout);
     Main_system mainSystem;
@@ -130,6 +130,9 @@ void check_invisible(std::string string) {
 }
 
 void check_invisible_(char *string) {
+    if (string==nullptr){
+        return;
+    }
     int i0 = 0;
     while (string[i0] != 0) {
         char i = string[i0];
@@ -223,12 +226,15 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
                 IV();
                 return;
             }
+            check_invisible_(userid);
+            check_invisible_(psw);
             mainSystem.su(userid, psw);
         } else {
             if (check_num_letter_(userid) || strlen(userid) > 30) {
                 IV();
                 return;
             }
+            check_invisible_(userid);
             mainSystem.su(userid);
         }
     } else if (order == "logout") {
@@ -254,6 +260,9 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
             IV();
             return;
         }
+        check_invisible_(userid);
+        check_invisible_(psw);
+        check_invisible_(username);
         mainSystem.register_(userid, psw, username);
     } else if (order == "passwd") {
 //        assert(0);
@@ -270,6 +279,8 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
                 IV();
                 return;
             }
+            check_invisible_(userid);
+            check_invisible_(npsw);
             mainSystem.passwd(userid, npsw);
         } else {
             strcpy(cpsw, string2.c_str());
@@ -279,6 +290,9 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
                 IV();
                 return;
             }
+            check_invisible_(userid);
+            check_invisible_(npsw);
+            check_invisible_(cpsw);
             mainSystem.passwd(userid, npsw, cpsw);
         }
     } else if (order == "useradd") {
@@ -319,8 +333,8 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
             IV();
             return;
         }
+        check_invisible_(userid);
         mainSystem.delete_(userid);
-
     } else if (order == "show") {
         if (string1 == "finance") {
 //            assert(0);
@@ -446,6 +460,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
             IV();
             return;
         }
+        check_invisible_(isbn);
         mainSystem.buy(isbn, q);
     } else if (order == "select") {
 //        assert(0);
@@ -542,6 +557,9 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
             }
         }
         //null,isbn,name,author,keyword,price;
+        for (int i = 1; i < 6; ++i) {
+            check_invisible_(trans[i]);
+        }
         mainSystem.modify(trans[1], trans[2], trans[3], trans[4], trans[5]);
     } else if (order == "import") {
 //        assert(0);
