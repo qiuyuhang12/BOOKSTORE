@@ -38,7 +38,7 @@ void clear_file() {
 }
 
 int main() {
-//    clear_file();
+    clear_file();
 //    std::cout<<'\7';
 //    exit(0);
 //    freopen("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/tmp","w",stdout);
@@ -691,3 +691,51 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
 //Check
 
 //throw
+
+//
+//su root sjtu
+//
+//
+//passwd root sjd
+//
+//passwd 23)4#$r
+//
+//useradd isjf_S ds 3 dfs
+
+
+//su root sjtu
+//passwd root sjd
+//passwd 23)4#$r
+//useradd isjf_S ds 3 dfsInvalid
+//passwd root 2132@#
+//su s)
+//su 2*_
+//useradd a a 3 4
+//su hfsi
+//su 2:
+//su a 2#
+//su a a_
+//delete @#
+//show finance
+//show finance 4
+//show finance 1
+//show finance 0
+//show finance -1
+//show finance 1 1
+//select a
+//import 34 34
+//import 2.3 2
+//import 1231 32123213
+//import 00000023
+//import 0000123 032.3
+//show
+//show finance
+//show finance
+//show finance
+//show finance
+//show finance 1
+//show finance 0
+//log
+//show
+//report finance
+//show finance

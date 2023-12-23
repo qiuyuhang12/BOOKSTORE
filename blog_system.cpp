@@ -3,6 +3,7 @@
 //
 #include "blog_system.h"
 #include <iomanip>
+
 std::ostream &operator<<(std::ostream &out, Price price1) {
     if (price1.float_ / 10 == 0) {
         out << price1.integer << '.' << 0 << price1.float_;
@@ -98,24 +99,43 @@ Count Blog_system::get_last() {
     count_file.seekg(-long(sizeof(Count)), std::ios::end);
     Count count1;
     count_file.read(reinterpret_cast<char *>(&count1), sizeof(Count));
+    if (count_file.eof()) {
+        count_file.close();
+        count_file.open("count_file", std::ios::in | std::ios::out | std::ios::binary);
+    }
     return count1;
 }
 
 Count Blog_system::get_count(int count) {
-    if (count==0){
+    if (count == 0) {
         Count count1;
         return count1;
     }
     count_file.seekg((long) sizeof(int) + (count - 1) * long(sizeof(Count)), std::ios::beg);
     Count count1;
     count_file.read(reinterpret_cast<char *>(&count1), sizeof(Count));
+    if (count_file.eof()) {
+        count_file.close();
+        count_file.open("count_file", std::ios::in | std::ios::out | std::ios::binary);
+    }
     return count1;
 }
 
 void Blog_system::show_finance(int count) {
+    count_file.flush();
     if (count == -1) {
-        Count count1 = get_last();
+        int num = 0;
+        count_file.seekg(0, std::ios::beg);
+        count_file.read(reinterpret_cast<char *>(&num), sizeof(int));
+        Count count1;
+        if (num > 0) {
+            count1 = get_last();
+        }
         std::cout << "+ " << count1.money_in << " - " << count1.money_out << '\n';
+        if (count_file.eof()) {
+            count_file.close();
+            count_file.open("count_file", std::ios::in | std::ios::out | std::ios::binary);
+        }
         return;
     }
     if (count == 0) {
@@ -130,59 +150,70 @@ void Blog_system::show_finance(int count) {
         return;
     }
     Count count1;
-    count1 = get_count(num-count);
-    Count last=get_last();
-    std::cout << "+ " << last.money_in-count1.money_in << " - " << last.money_out-count1.money_out << '\n';
+    count1 = get_count(num - count);
+    Count last = get_last();
+    std::cout << "+ " << last.money_in - count1.money_in << " - " << last.money_out - count1.money_out << '\n';
+    if (count_file.eof()) {
+        count_file.close();
+        count_file.open("count_file", std::ios::in | std::ios::out | std::ios::binary);
+    }
 }
 
 void Blog_system::log() {
     //todo:-1了seek还有用吗
     log_file.flush();
-    log_file.seekg(0,std::ios::beg);
-    std::cout<<std::setw(13+2)<<"MONEYIN"<<" \t"<<std::setw(13+1)<<"MONEYOUT"<<" \t"<<std::setw(23)<<"UserID"<<" \t"<<"                            ACTION"<<"\n\n";
-    while (!log_file.eof()){
+    log_file.seekg(0, std::ios::beg);
+    std::cout << std::setw(13 + 2) << "MONEYIN" << " \t" << std::setw(13 + 1) << "MONEYOUT" << " \t" << std::setw(23)
+              << "UserID" << " \t" << "                            ACTION" << "\n\n";
+    while (!log_file.eof()) {
         Do_table doTable;
-        log_file.read(reinterpret_cast<char*>(&doTable), sizeof(Do_table));
-        if (log_file.eof()){
+        log_file.read(reinterpret_cast<char *>(&doTable), sizeof(Do_table));
+        if (log_file.eof()) {
             break;
         }
-        std::cout<<"|+"<<std::setw(13)<<doTable.in<<"|\t"<<"-"<<std::setw(13)<<doTable.out<<"|\t"<<std::setw(33)<<doTable.UserID<<"|\t"<<doTable.do_<<"\n";
+        std::cout << "|+" << std::setw(13) << doTable.in << "|\t" << "-" << std::setw(13) << doTable.out << "|\t"
+                  << std::setw(33) << doTable.UserID << "|\t" << doTable.do_ << "\n";
     }
     log_file.close();
-    log_file.open("log_file",std::ios::out|std::ios::in|std::ios::binary);
+    log_file.open("log_file", std::ios::out | std::ios::in | std::ios::binary);
 }
 
 void Blog_system::report_finance() {
     report_finance_file.flush();
-    report_finance_file.seekg(0,std::ios::beg);
-    std::cout<<'\n'<<std::setw(13)<<"MONEYIN"<<"\t"<<std::setw(17)<<"MONEYOUT"<<"\t"<<std::setw(23)<<"UserID"<<"\t"<<std::setw(10)<<"                 ACTION"<<"\t"<<std::setw(18)<<"ISBN"<<std::setw(20)<<"Quality"<<"\n\n";
-    while (!report_finance_file.eof()){
+    report_finance_file.seekg(0, std::ios::beg);
+    std::cout << '\n' << std::setw(13) << "MONEYIN" << "\t" << std::setw(17) << "MONEYOUT" << "\t" << std::setw(23)
+              << "UserID" << "\t" << std::setw(10) << "                 ACTION" << "\t" << std::setw(18) << "ISBN"
+              << std::setw(20) << "Quality" << "\n\n";
+    while (!report_finance_file.eof()) {
         Finance_table financeTable;
-        report_finance_file.read(reinterpret_cast<char*>(&financeTable), sizeof(Finance_table));
-        if (report_finance_file.eof()){
+        report_finance_file.read(reinterpret_cast<char *>(&financeTable), sizeof(Finance_table));
+        if (report_finance_file.eof()) {
             break;
         }
-        std::cout<<"|+"<<std::setw(13)<<financeTable.money_in<<"|\t"<<"-"<<std::setw(13)<<financeTable.money_out<<"|\t"<<std::setw(33)<<financeTable.UserID<<"|\t"<<std::setw(10)<<financeTable.do_<<"|\t"<<std::setw(23)<<financeTable.ISBN<<'|'<<std::setw(10)<<financeTable.Quality<<"\n";
+        std::cout << "|+" << std::setw(13) << financeTable.money_in << "|\t" << "-" << std::setw(13)
+                  << financeTable.money_out << "|\t" << std::setw(33) << financeTable.UserID << "|\t" << std::setw(10)
+                  << financeTable.do_ << "|\t" << std::setw(23) << financeTable.ISBN << '|' << std::setw(10)
+                  << financeTable.Quality << "\n";
     }
     report_finance_file.close();
-    report_finance_file.open("report_finance_file",std::ios::out|std::ios::in|std::ios::binary);
+    report_finance_file.open("report_finance_file", std::ios::out | std::ios::in | std::ios::binary);
 }
 
 void Blog_system::report_employee() {
     report_employee_file.flush();
-    report_employee_file.seekg(0,std::ios::beg);
-    std::cout<<'\n'<<std::setw(20)<<"UserID"<<"\t"<<"                          ACTION"<<"\n\n";
+    report_employee_file.seekg(0, std::ios::beg);
+    std::cout << '\n' << std::setw(20) << "UserID" << "\t" << "                          ACTION" << "\n\n";
 
-    while (!report_employee_file.eof()){
+    while (!report_employee_file.eof()) {
         Employee_table employeeTable;
-        report_employee_file.read(reinterpret_cast<char*>(&employeeTable), sizeof(Employee_table));
-        if (report_employee_file.eof()){
+        report_employee_file.read(reinterpret_cast<char *>(&employeeTable), sizeof(Employee_table));
+        if (report_employee_file.eof()) {
             break;
         }
-        std::cout<<'|'<<std::setw(33)<<employeeTable.UserID<<"|\t"<<employeeTable.do_<<"\n";
+        std::cout << '|' << std::setw(33) << employeeTable.UserID << "|\t" << employeeTable.do_ << "\n";
     }
     report_employee_file.close();
-    report_employee_file.open("report_employee_file",std::ios::out|std::ios::in|std::ios::binary);
+    report_employee_file.open("report_employee_file", std::ios::out | std::ios::in | std::ios::binary);
 }
 
 void Blog_system::add_count(Count &count) {
