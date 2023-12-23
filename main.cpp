@@ -263,7 +263,10 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         strcpy(psw, string2.c_str());
         pri = string3[0] - '0';
         strcpy(username, string4.c_str());
-        if (check_num_letter_(psw) || check_num_letter_(userid) || (pri != 0 && pri != 1 && pri != 3 && pri != 7) ||
+        if (check_num_letter_(psw) || check_num_letter_(userid)){
+            return;
+        }
+        if ((pri != 0 && pri != 1 && pri != 3 && pri != 7) ||
             strlen(userid) > 30 || strlen(username) > 30 || strlen(psw) > 30) {
             IV();
             return;
