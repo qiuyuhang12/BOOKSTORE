@@ -625,6 +625,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         }
         mainSystem.import(q, ti, tf);
     } else if (order == "log") {
+        assert(0);
         if (mainSystem.accountSystem.log_on_now.Privilege < 7) {
             IV();
             return;
@@ -635,6 +636,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         }
         mainSystem.log();
     } else if (order == "report") {
+        assert(0);
         if (mainSystem.accountSystem.log_on_now.Privilege < 7) {
             IV();
             return;
