@@ -35,7 +35,7 @@ void clear_file() {
 }
 
 int main() {
-//    clear_file();
+    clear_file();
     Main_system mainSystem;
     std::string line;
     while (getline(std::cin, line)) {
@@ -712,3 +712,41 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
 //import 10 0
 //import 10 0.00
 //show
+
+
+//su root sjtu
+//select a
+//modify -price=10
+//modify -price=10.
+//Invalid
+//modify -price=.10
+//Invalid
+//modify -price=0
+//Invalid
+//modify -price=.
+//Invalid
+//modify -price=0.0
+//Invalid
+//modify -price=..
+//Invalid
+//modify -price=10.0.0
+//Invalid
+//modify -price=0.00
+//Invalid
+//modify -price=10
+//import 0 10
+//Invalid
+//import 1 0
+//Invalid
+//import 1 .
+//Invalid
+//import 1 .0
+//Invalid
+//import 1 .00
+//Invalid
+//import 1 0.00
+//Invalid
+//import 1 ..
+//Invalid
+//import 1 0.0.0
+//Invalid
