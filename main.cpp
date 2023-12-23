@@ -421,7 +421,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         }
         mainSystem.buy(isbn, q);
     } else if (order == "select") {
-        assert(0);
+//        assert(0);
         char isbn[21] = {0};
         if (string1.empty() || string1.size() > 30 || !string2.empty()) {
             IV();
@@ -435,6 +435,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         mainSystem.select(isbn);
     } else if (order == "modify") {
         //todo查重，查格式
+        assert(0);
         if (!string6.empty()) {
             IV();
             return;
