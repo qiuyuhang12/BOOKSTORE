@@ -296,7 +296,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
 
     } else if (order == "show") {
         if (string1 == "finance") {
-            assert(0);
+//            assert(0);
             if (mainSystem.accountSystem.log_on_now.Privilege < 7) {
                 IV();
                 return;
