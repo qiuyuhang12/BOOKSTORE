@@ -321,6 +321,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
             }
             return;
         }
+        assert(0);
         if (!string2.empty()) {
             IV();
             return;
