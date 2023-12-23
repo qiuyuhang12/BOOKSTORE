@@ -38,7 +38,7 @@ void clear_file() {
 }
 
 int main() {
-    clear_file();
+//    clear_file();
 //    std::cout<<'\7';
 //    exit(0);
 //    freopen("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/tmp","w",stdout);
