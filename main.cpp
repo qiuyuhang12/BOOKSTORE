@@ -39,6 +39,7 @@ void clear_file() {
 
 int main() {
 //    clear_file();
+//    std::cout<<'\26';
 //    exit(0);
 //    freopen("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/tmp","w",stdout);
     Main_system mainSystem;
@@ -120,6 +121,25 @@ bool show_form_iv(std::string &in, index_type type) {
     return rsl;
 }
 
+void check_invisible(std::string string) {
+    for (auto i: string) {
+        if ((int) i <= 32 || (int) i >= 127) {
+            throw Err();
+        }
+    }
+}
+
+void check_invisible_(char *string) {
+    int i0 = 0;
+    while (string[i0] != 0) {
+        char i = string[i0];
+        if ((int) i <= 32 || (int) i >= 127) {
+            throw Err();
+        }
+        i0++;
+    }
+}
+
 std::string get_information(std::string &in, index_type type) {//todo测试
     std::string tmp;
     switch (type) {
@@ -169,6 +189,7 @@ std::string get_information(std::string &in, index_type type) {//todo测试
             tmp.insert(0, in, 7, in.size() - 7);
             break;
     }
+    check_invisible(tmp);
     return tmp;
 }
 
@@ -282,6 +303,9 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
             IV();
             return;
         }
+        check_invisible_(userid);
+        check_invisible_(psw);
+        check_invisible_(username);
         mainSystem.useradd(userid, psw, pri, username);
     } else if (order == "delete") {
 //        assert(0);
