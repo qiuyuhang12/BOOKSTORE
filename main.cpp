@@ -687,3 +687,28 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
 //show finance
 
 //fstream
+
+
+//su root sjtu
+//select a
+//modify -price=.
+//Invalid
+//modify -price=0
+//modify -price=0.0
+//import 10 0
+//Invalid
+//import 10 0.00
+//Invalid
+//show
+//
+//show
+
+
+//su root sjtu
+//select a
+//modify -price=.
+//modify -price=0
+//modify -price=0.0
+//import 10 0
+//import 10 0.00
+//show

@@ -225,6 +225,11 @@ Price to_price(char *price) {
         ti *= 10;
         ti += string2[i] - '0';
     }
+    if (ti==0&&tf==0){
+        IV();
+        int a;
+        throw a;
+    }
     tmp.integer = ti;
     tmp.float_ = tf;
     return tmp;
