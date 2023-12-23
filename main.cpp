@@ -234,7 +234,8 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
             mainSystem.su(userid, psw);
         } else {
             if (check_num_letter_(userid)) {
-                IV();
+//                IV();
+                return;
             }
             if (strlen(userid) > 30) {
                 IV();
@@ -679,6 +680,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
 //show finance 1
 //show finance 2
 //show finance 3
+//check_num_letter_
 //check_no_quote(
 //check_split(
 //check_repeat(
