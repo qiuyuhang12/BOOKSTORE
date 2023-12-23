@@ -48,6 +48,8 @@ int main() {
     Dictionary dictionary;
 //    int i=0;
     while (getline(std::cin, line)) {
+        assert(!mainSystem.accountSystem.file.eof());
+        assert(!mainSystem.bookSystem.books.eof());
 //        i++;
 //        std::cout<<i;
         if (line.empty()) {
@@ -739,3 +741,5 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
 //show
 //report finance
 //show finance
+
+//fstream

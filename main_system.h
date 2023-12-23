@@ -90,10 +90,10 @@ public:
 
     Blog_system blogSystem;
     Account_system accountSystem;
-
-private:
     Book_system bookSystem;
     Log_system logSystem;
+
+private:
 };
 
 bool privilege_check(int lowest_privilege);

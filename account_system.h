@@ -47,13 +47,13 @@ public:
     std::map<std::string ,int> loger_num;
 //    std::unordered_map<char*,int> loger_num;
     int last_position_of_account=0;//最后一个account的begin//todo内存转外存
+    std::fstream file;
 
 private:
     void useradd_hard(char *UserID, char *Password, int Privilege, char *Username);
     void add_log();
     void add_employ();
     Blog_system*blogSystem= nullptr;
-    std::fstream file;
     Key_value_database UserID_index_file;
 //    void erase(int position);//删去accounts中此处
     Account get(int position);//得到accounts中此处
