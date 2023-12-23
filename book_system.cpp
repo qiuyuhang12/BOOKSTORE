@@ -83,6 +83,16 @@ bool cmpp(const Book lhs,const Book rhs){
     }
     return false;
 }
+bool check_split(char *in){
+    int i=0;
+    while (in[i]!=0){
+        if (in[i]=='|'){
+            return true;
+        }
+        i++;
+    }
+    return false;
+}
 void Book_system::show(char *index, index_type type) {
     if (accountSystem1->log_on_now.Privilege < 1) {
         IV();
@@ -104,6 +114,10 @@ void Book_system::show(char *index, index_type type) {
             all = fAuthor.find_no_output(index);
             break;
         case keyword:
+            if (check_split(index)){
+                IV();
+                return;
+            }
             all = fKeyWord.find_no_output(index);
             break;
     }
@@ -248,7 +262,22 @@ bool check_repeat(std::vector<std::string> &in) {//有重为true
     }
     return false;
 }
-
+bool check_kyw_length(char *in){
+    if (in[0]==0||in[0]=='|'){
+        return true;
+    }
+    int i=1;
+    while (in[i]!=0){
+        if (in[i]=='|'&&in[i-1]=='|'){
+            return true;
+        }
+        i++;
+    }
+    if (in[i-1]=='|'){
+        return true;
+    }
+    return false;
+}
 void Book_system::modify(char *ISBN, char *name, char *author, char *keyword, char *price) {
     if (accountSystem1->log_on_now.Privilege < 3) {
         IV();
@@ -271,6 +300,10 @@ void Book_system::modify(char *ISBN, char *name, char *author, char *keyword, ch
 
     Book old = selected;//todo测试这是否合法
     if (keyword != nullptr) {
+        if (check_kyw_length(keyword)){
+            IV();
+            return;
+        }
         std::vector<std::string> keys = piece_keyword(keyword);
         if (check_repeat(keys)) {
             IV();

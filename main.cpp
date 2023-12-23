@@ -36,7 +36,7 @@ void clear_file() {
 }
 
 int main() {
-//    clear_file();
+    clear_file();
 //    exit(0);
 //    freopen("/run/media/qiuyuhang/data/cpp_file/Bookstore-2023/tmp","w",stdout);
     Main_system mainSystem;
@@ -122,24 +122,54 @@ std::string get_information(std::string &in, index_type type) {//todo测试
     std::string tmp;
     switch (type) {
         case ISBN:
+            if (in.size()<=6){
+                throw Err();
+            }
+            if (in[0+5]==0){
+                throw Err();
+            }
             tmp.insert(0, in, 6, in.size() - 6);
             break;
         case name:
+            if (in.size()<=8){
+                throw Err();
+            }
+            if (in[0+6]=='\"'&&in[1+6]=='\"'&&in.size()==8){
+                throw Err();
+            }
             tmp.insert(0, in, 7, in.size() - 8);
             break;
         case author:
+            if (in.size()<=10){
+                throw Err();
+            }
+            if (in[0+8]=='\"'&&in[1+8]=='\"'&&in.size()==10){
+                throw Err();
+            }
             tmp.insert(0, in, 9, in.size() - 10);
             break;
         case keyword:
+            if (in.size()<=11){
+                throw Err();
+            }
+            if (in[0+10-1]=='\"'&&in[1+10-1]=='\"'&&in.size()==11){
+                throw Err();
+            }
             tmp.insert(0, in, 10, in.size() - 11);
             break;
         case price:
+            if (in.size()<=7){
+                throw Err();
+            }
+            if (in[0+6]==0){
+                throw Err();
+            }
             tmp.insert(0, in, 7, in.size() - 7);
             break;
     }
     return tmp;
 }
-
+//bool check_quote_quote_blank
 void order_analyse(std::string &line, Main_system &mainSystem) {
     mainSystem.blogSystem.do_str = &line;
     Piece piece(line);
@@ -457,6 +487,10 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
                 return;
             }
             strcpy(information[tmp], get_information(*(strs[i]), tmp).c_str());
+            if (information[tmp]== nullptr){
+                IV();
+                return;
+            }
         }
         for (int i = 1; i < 6; ++i) {
             if (information[i][0] != 0) {
