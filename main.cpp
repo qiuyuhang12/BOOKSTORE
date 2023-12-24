@@ -42,8 +42,16 @@ int main() {
         if (line.empty()) {
             continue;
         }
-        if (line == "quit" || line == "exit") {
-            break;
+        std::string tmp=line;
+        Piece piece0(tmp);
+        std::string line_=piece0.get(),line_empty=piece0.get();
+        if (line_ == "quit" || line_ == "exit") {
+            if (line_empty.empty()){
+                break;
+            } else{
+                IV();
+                continue;
+            }
         }
         try {
             order_analyse(line, mainSystem);
