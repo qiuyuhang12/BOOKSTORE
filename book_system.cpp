@@ -192,7 +192,26 @@ Price to_price(char *price) {
     int ti = 0, tf = 0;
     for (int i = 0; i < string2.size(); ++i) {
         if (string2[i] == '.') {
-            if (string2.size() >= i + 4 || string2.size() == i + 1) {//不是.不是.xxx
+            if (string2.size() >= i + 4){//是.xxx
+                int num=0;
+                for (auto item:string2) {
+                    if ((item<'0'||item>'9')&&item!='.'){
+                        throw Err();
+                    }
+                    if (item=='.'){
+                        num++;
+                    }
+                }
+                if (num>=2){
+                    throw Err();
+                }
+                tf=(string2[i+1]-'0')*10+string2[i+2]-'0';
+                if (string2[i+3]>='5'){
+                    tf++;
+                }
+                break;
+            }
+            if (string2.size() == i + 1) {//不是.不是.xxx
                 IV();
                 int a;
                 throw a;
