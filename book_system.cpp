@@ -284,6 +284,8 @@ bool check_kyw_length(char *in) {
 }
 
 void Book_system::modify(char *ISBN, char *name, char *author, char *keyword, char *price) {
+    Book book= get(select_position);
+    selected.storage=book.storage;
     if (accountSystem1->log_on_now.Privilege < 3) {
         IV();
         return;

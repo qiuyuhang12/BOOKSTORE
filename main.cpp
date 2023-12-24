@@ -762,3 +762,55 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
 //Invalid
 //import 1 0.0.0
 //Invalid
+
+
+
+//su root sjtu
+//select a
+//show
+//a				0.00	10
+//modify -ISBN=b
+//show
+//b				0.00	10
+//buy a 0
+//Invalid
+//select c
+//import 100 100
+//buy c 1
+//0.00
+//show
+//b				0.00	10
+//c				0.00	99
+//modify -ISBN=0
+//show
+//0				0.00	100
+//b				0.00	10
+//show
+//0				0.00	100
+//b				0.00	10
+//buy 0 1
+//0.00
+//show
+//0				0.00	99
+//b				0.00	10
+//buy c 1
+//Invalid
+
+//
+//su root sjtu
+//select c
+//import 100 100
+//buy c 1
+//
+//modify -ISBN=0
+//show
+//0				0.00	100
+//b				0.00	10
+
+//buy 0 1
+//0.00
+//show
+//0				0.00	99
+//b				0.00	10
+//buy c 1
+//Invalid
