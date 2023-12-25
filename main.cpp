@@ -6,7 +6,8 @@
 #include <string>
 #include <cstring>
 #include <assert.h>
-
+#include <istream>
+#include <regex>
 //
 void order_analyse(std::string &line, Main_system &);
 
@@ -62,7 +63,21 @@ int main() {
     }
     return 0;
 }
+void check_orthornormal(std::string& string){
+    std::istringstream str(string);
+    std::string word;
+    str>>word;
+    while (str>>word){
+        std::regex rg(
+        R"(-ISBN=[^\x00-\x1F\s]{1,20}|-name="[^"\x00-\x1F\s]{1,60}"|-author="[^"\x00-\x1F\s]{1,60}"|-keyword="[^"\x00-\x1F\s]{1,60}"|-price=\d+(\.\d+))");
+        if (std::regex_match(word,rg)){
+            return;
+        } else{
+            throw Err();
+        }
+    }
 
+}
 bool show_form_iv(std::string &in, index_type type) {
     bool rsl = false;
     std::string tmp;
@@ -454,6 +469,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         }
         mainSystem.select(isbn);
     } else if (order == "modify") {
+        check_orthornormal(line);
         //查重，查格式
         if (string1.empty()){
             IV();
