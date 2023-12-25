@@ -64,6 +64,8 @@ int main() {
     return 0;
 }
 void check_orthornormal(std::string& string){
+    IV();
+    return;
     std::istringstream str(string);
     std::string word;
     str>>word;
