@@ -363,6 +363,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
             }
             return;
         }
+        check_orthornormal(line);
         if (!string2.empty()) {
             IV();
             return;
