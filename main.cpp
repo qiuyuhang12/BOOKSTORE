@@ -473,6 +473,7 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         }
         mainSystem.select(isbn);
     } else if (order == "modify") {
+        return;
         check_orthornormal(line);
         //查重，查格式
         if (string1.empty()){
