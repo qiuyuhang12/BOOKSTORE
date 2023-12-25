@@ -64,12 +64,14 @@ int main() {
     return 0;
 }
 void check_orthornormal(std::string& string){
-    assert(0);
-    throw Err();
+//    assert(0);
+//    throw Err();
     std::istringstream str(string);
     std::string word;
     str>>word;
+    int sz =0;
     while (str>>word){
+        if (++sz>5)throw Err();
         std::regex rg(
         R"(-ISBN=[^\x00-\x1F\s]{1,20}|-name="[^"\x00-\x1F\s]{1,60}"|-author="[^"\x00-\x1F\s]{1,60}"|-keyword="[^"\x00-\x1F\s]{1,60}"|-price=\d+(\.\d+))");
         if (std::regex_match(word,rg)){
