@@ -73,7 +73,7 @@ void check_orthornormal(std::string& string){
     while (str>>word){
         if (++sz>5)throw Err();
         std::regex rg(
-        R"(-ISBN=[^\x00-\x1F\s]{1,20}|-name="[^"\x00-\x1F\s]{1,60}"|-author="[^"\x00-\x1F\s]{1,60}"|-keyword="[^"\x00-\x1F\s]{1,60}"|-price=\d+(\.\d+))");
+        R"(-ISBN=[^\x00-\x1F\s]{1,20}|-name="[^"\x00-\x1F\s]{1,60}"|-author="[^"\x00-\x1F\s]{1,60}"|-keyword="[^"\x00-\x1F\s]{1,60}"|-price=\d+(\.\d+)?)");
         if (std::regex_match(word,rg)){
             return;
         } else{
@@ -563,7 +563,8 @@ void order_analyse(std::string &line, Main_system &mainSystem) {
         }
         mainSystem.modify(trans[1], trans[2], trans[3], trans[4], trans[5]);
     } else if (order == "import") {
-        int q = 0, ti = 0, tf = 0;
+        int q = 0;
+        long long ti = 0, tf = 0;
         if (string1.empty() || string2.empty() || string1.size() > 10 || string2.size() > 13
             || !string3.empty()) {
             IV();
